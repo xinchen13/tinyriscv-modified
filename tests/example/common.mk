@@ -1,14 +1,14 @@
 
-RISCV_PATH := $(TOOLCHAIN_DIR)/tools/gnu-mcu-eclipse-riscv-none-gcc-8.2.0-2.2-20190521-0004-win64/
+RISCV_PATH := $(TOOLCHAIN_DIR)/tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14/
 
-RISCV_GCC     := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-gcc)
-RISCV_AS      := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-as)
-RISCV_GXX     := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-g++)
-RISCV_OBJDUMP := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-objdump)
-RISCV_GDB     := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-gdb)
-RISCV_AR      := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-ar)
-RISCV_OBJCOPY := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-objcopy)
-RISCV_READELF := $(abspath $(RISCV_PATH)/bin/riscv-none-embed-readelf)
+RISCV_GCC     := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-gcc)
+RISCV_AS      := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-as)
+RISCV_GXX     := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-g++)
+RISCV_OBJDUMP := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-objdump)
+RISCV_GDB     := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-gdb)
+RISCV_AR      := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-ar)
+RISCV_OBJCOPY := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-objcopy)
+RISCV_READELF := $(abspath $(RISCV_PATH)/bin/riscv64-unknown-elf-readelf)
 
 .PHONY: all
 all: $(TARGET)
