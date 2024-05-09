@@ -27,10 +27,9 @@ module gpio(
 
     output reg[31:0] data_o,
 
-    input wire[1:0] io_pin_i,
+    input wire[15:0] io_pin_i,       // 16x GPIO
     output wire[31:0] reg_ctrl,
     output wire[31:0] reg_data
-
     );
 
 
@@ -71,6 +70,48 @@ module gpio(
                 end
                 if (gpio_ctrl[3:2] == 2'b10) begin
                     gpio_data[1] <= io_pin_i[1];
+                end
+                if (gpio_ctrl[5:4] == 2'b10) begin
+                    gpio_data[2] <= io_pin_i[2];
+                end
+                if (gpio_ctrl[7:6] == 2'b10) begin
+                    gpio_data[3] <= io_pin_i[3];
+                end
+                if (gpio_ctrl[9:8] == 2'b10) begin
+                    gpio_data[4] <= io_pin_i[4];
+                end
+                if (gpio_ctrl[11:10] == 2'b10) begin
+                    gpio_data[5] <= io_pin_i[5];
+                end
+                if (gpio_ctrl[13:12] == 2'b10) begin
+                    gpio_data[6] <= io_pin_i[6];
+                end
+                if (gpio_ctrl[15:14] == 2'b10) begin
+                    gpio_data[7] <= io_pin_i[7];
+                end
+                if (gpio_ctrl[17:16] == 2'b10) begin
+                    gpio_data[8] <= io_pin_i[8];
+                end
+                if (gpio_ctrl[19:18] == 2'b10) begin
+                    gpio_data[9] <= io_pin_i[9];
+                end
+                if (gpio_ctrl[21:20] == 2'b10) begin
+                    gpio_data[10] <= io_pin_i[10];
+                end
+                if (gpio_ctrl[23:22] == 2'b10) begin
+                    gpio_data[11] <= io_pin_i[11];
+                end
+                if (gpio_ctrl[25:24] == 2'b10) begin
+                    gpio_data[12] <= io_pin_i[12];
+                end
+                if (gpio_ctrl[27:26] == 2'b10) begin
+                    gpio_data[13] <= io_pin_i[13];
+                end
+                if (gpio_ctrl[29:28] == 2'b10) begin
+                    gpio_data[14] <= io_pin_i[14];
+                end
+                if (gpio_ctrl[31:30] == 2'b10) begin
+                    gpio_data[15] <= io_pin_i[15];
                 end
             end
         end

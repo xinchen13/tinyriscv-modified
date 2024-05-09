@@ -31,7 +31,7 @@ module tinyriscv_soc_top(
 
     output wire uart_tx_pin, // UART发送引脚
     input wire uart_rx_pin,  // UART接收引脚
-    inout wire[1:0] gpio,    // GPIO引脚
+    inout wire[15:0] gpio,    // GPIO引脚
 
     input wire jtag_TCK,     // JTAG TCK引脚
     input wire jtag_TMS,     // JTAG TMS引脚
@@ -128,7 +128,7 @@ module tinyriscv_soc_top(
     wire timer0_int;
 
     // gpio
-    wire[1:0] io_in;
+    wire[15:0] io_in;
     wire[31:0] gpio_ctrl;
     wire[31:0] gpio_data;
 
@@ -223,6 +223,35 @@ module tinyriscv_soc_top(
     // io1
     assign gpio[1] = (gpio_ctrl[3:2] == 2'b01)? gpio_data[1]: 1'bz;
     assign io_in[1] = gpio[1];
+    // io2~15
+    assign gpio[2] = (gpio_ctrl[5:4] == 2'b01)? gpio_data[2]: 1'bz;
+    assign io_in[2] = gpio[2];
+    assign gpio[3] = (gpio_ctrl[7:6] == 2'b01)? gpio_data[3]: 1'bz;
+    assign io_in[3] = gpio[3];
+    assign gpio[4] = (gpio_ctrl[9:8] == 2'b01)? gpio_data[4]: 1'bz;
+    assign io_in[4] = gpio[4];
+    assign gpio[5] = (gpio_ctrl[11:10] == 2'b01)? gpio_data[5]: 1'bz;
+    assign io_in[5] = gpio[5];
+    assign gpio[6] = (gpio_ctrl[13:12] == 2'b01)? gpio_data[6]: 1'bz;
+    assign io_in[6] = gpio[6];
+    assign gpio[7] = (gpio_ctrl[15:14] == 2'b01)? gpio_data[7]: 1'bz;
+    assign io_in[7] = gpio[7];
+    assign gpio[8] = (gpio_ctrl[17:16] == 2'b01)? gpio_data[8]: 1'bz;
+    assign io_in[8] = gpio[8];
+    assign gpio[9] = (gpio_ctrl[19:18] == 2'b01)? gpio_data[9]: 1'bz;
+    assign io_in[9] = gpio[9];
+    assign gpio[10] = (gpio_ctrl[21:20] == 2'b01)? gpio_data[10]: 1'bz;
+    assign io_in[10] = gpio[10];
+    assign gpio[11] = (gpio_ctrl[23:22] == 2'b01)? gpio_data[11]: 1'bz;
+    assign io_in[11] = gpio[11];
+    assign gpio[12] = (gpio_ctrl[25:24] == 2'b01)? gpio_data[12]: 1'bz;
+    assign io_in[12] = gpio[12];
+    assign gpio[13] = (gpio_ctrl[27:26] == 2'b01)? gpio_data[13]: 1'bz;
+    assign io_in[13] = gpio[13];
+    assign gpio[14] = (gpio_ctrl[29:28] == 2'b01)? gpio_data[14]: 1'bz;
+    assign io_in[14] = gpio[14];
+    assign gpio[15] = (gpio_ctrl[31:30] == 2'b01)? gpio_data[15]: 1'bz;
+    assign io_in[15] = gpio[15];
 
     // gpio模块例化
     gpio gpio_0(
