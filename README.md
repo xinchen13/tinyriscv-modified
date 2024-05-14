@@ -18,5 +18,8 @@
 - 直接修改 [defines.v](./rtl/core/defines.v) 中的定义即可
 - 在编译软件时需要修改链接脚本. 如在 [link.lds](./tests/example/link.lds) 中需要修改 MEMORY 关键词中的 ram 大小并调整 stack 大小 `__stack_size`
 
+其他说明
+- 添加了脚本文件 [sim_data_file.py](./sim/sim_data_file.py), 在 `sim/` 目录下可以使用如下命令指定转换好的 `xxx.data` 文件作为测试向量: `python sim_data_file.py path_of_the_target_mem_file.data inst.data`
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
