@@ -146,9 +146,9 @@
 `define CSR_MSTATUS 12'h300
 `define CSR_MSCRATCH 12'h340
 
-`define RomNum 4096  // rom depth(how many words)
+`define RomNum 256 // rom depth(how many words)    4096 ->  256
 
-`define MemNum 4096  // memory depth(how many words)
+`define MemNum 256  // memory depth(how many words)
 `define MemBus 31:0
 `define MemAddrBus 31:0
 

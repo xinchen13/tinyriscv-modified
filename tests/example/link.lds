@@ -5,13 +5,13 @@ ENTRY(_start)
 MEMORY
 {
   flash (wxa!ri) : ORIGIN = 0x00000000, LENGTH = 16K
-  ram (wxa!ri) :   ORIGIN = 0x10000000, LENGTH = 16K
+  ram (wxa!ri) :   ORIGIN = 0x10000000, LENGTH = 256
 }
 
 
 SECTIONS
 {
-   __stack_size = DEFINED(__stack_size) ? __stack_size : 8K;
+   __stack_size = DEFINED(__stack_size) ? __stack_size : 64;
 
   .init           :
   {

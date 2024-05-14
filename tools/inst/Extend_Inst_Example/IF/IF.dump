@@ -1,0 +1,13 @@
+
+# 将uart设置为tx模式
+lui	a5,0x30000
+li	a4,1
+sw	a4,0(a5)
+
+addi	x31 x0 128  	# 设置Vth
+add		x30 x0 x0   	# 复位Vmem
+IF 		x30 x30 0xa
+IF 		x30 x30 0x1a
+IF 		x30 x30 0x3a
+IF 		x30 x30 0x2c
+IF 		x30 x30 0x0
