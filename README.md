@@ -27,8 +27,8 @@
 <img src="./figs/pwm.png"  width="520" />
 
 - 在 [rib.v](./rtl/core/rib.v) 中给 rib 总线添加一个 slave interface, 按序号分配为 slave_6, 起始地址映射到 0x6000_0000
-- `rtl/utils/` 路径下添加 [gen_pulse.v](./rtl/utils/gen_pulse.v) 模块, 实现脉冲生成
-- `rtl/perips/` 中添加 [pwm.v](./rtl/perips/pwm.v) 外设, 完成寄存器定义, 读写寄存器, 例化 gen_pulse 模块
+- `rtl/utils/` 路径下添加 [gen_pulse.v](./rtl/utils/gen_pulse.v) 模块, 实现脉冲生成; `rtl/perips/` 中添加 [pwm.v](./rtl/perips/pwm.v) 外设, 完成寄存器定义, 读写寄存器, 例化 gen_pulse 模块
+- 顶层模块中添加总线子模块接口, 例化 pwm 模块
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
 - 编写软件库 [pwm.h](./tests/example/include/pwm.h), 定义寄存器地址和读写宏
 - 测试用例见 [pwm](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
