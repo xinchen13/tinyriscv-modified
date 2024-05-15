@@ -41,7 +41,9 @@ module tinyriscv_soc_top(
     input wire spi_miso,     // SPI MISO引脚
     output wire spi_mosi,    // SPI MOSI引脚
     output wire spi_ss,      // SPI SS引脚
-    output wire spi_clk      // SPI CLK引脚
+    output wire spi_clk,      // SPI CLK引脚
+
+    output wire [3:0] PWM_o     // pwm 输出
 
     );
 
@@ -109,6 +111,12 @@ module tinyriscv_soc_top(
     wire[`MemBus] s5_data_o;
     wire[`MemBus] s5_data_i;
     wire s5_we_o;
+
+    // slave 6 interface: pwm
+    wire[`MemAddrBus] s6_addr_o;
+    wire[`MemBus] s6_data_o;
+    wire[`MemBus] s6_data_i;
+    wire s6_we_o;
 
     // rib
     wire rib_hold_flag_o;
@@ -280,6 +288,17 @@ module tinyriscv_soc_top(
         .spi_clk(spi_clk)
     );
 
+    // pwm模块例化
+    pwm pwm_0(
+        .clk(clk),
+        .rst(rst),
+        .data_i(s6_data_o),
+        .addr_i(s6_addr_o),
+        .we_i(s6_we_o),
+        .data_o(s6_data_i),
+        .pwm_o(PWM_o)
+    );
+
     // rib模块例化
     rib u_rib(
         .clk(clk),
@@ -348,6 +367,12 @@ module tinyriscv_soc_top(
         .s5_data_o(s5_data_o),
         .s5_data_i(s5_data_i),
         .s5_we_o(s5_we_o),
+
+        // slave 6 interface
+        .s6_addr_o(s6_addr_o),
+        .s6_data_o(s6_data_o),
+        .s6_data_i(s6_data_i),
+        .s6_we_o(s6_we_o),
 
         .hold_flag_o(rib_hold_flag_o)
     );

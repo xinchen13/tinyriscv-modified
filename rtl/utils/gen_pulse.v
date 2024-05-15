@@ -13,23 +13,25 @@ module gen_pulse(
         if (~rst) begin
             cntr[31:0] <= 32'b0;
         end
-        else if (cntr[31:0] == freq_cnt) begin
-            cntr[31:0] <= 32'b0;
-        end
-        else begin
-            cntr[31:0] <= cntr[31:0] + 1'b1;
+        else if (en) begin
+            if (cntr[31:0] == (freq_cnt - 1'b1)) begin
+                cntr[31:0] <= 32'b0;
+            end
+            else begin
+                cntr[31:0] <= cntr[31:0] + 1'b1;
+            end
         end
     end
 
     always @ (*) begin
         if (~rst) begin
-            pulse <= 1'b0;
+            pulse = 1'b0;
         end
-        else if (en && cntr <= duty_cnt) begin
-            pulse <= 1'b1;
+        else if (en && (cntr < duty_cnt)) begin
+            pulse = 1'b1;
         end
         else begin
-            pulse <= 1'b0;
+            pulse = 1'b0;
         end
     end
 

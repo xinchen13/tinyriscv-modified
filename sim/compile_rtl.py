@@ -47,6 +47,7 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/uart.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/gpio.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/spi.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/perips/pwm.v')
     # ../rtl/debug
     iverilog_cmd.append(rtl_dir + r'/rtl/debug/jtag_dm.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/debug/jtag_driver.v')
@@ -59,6 +60,7 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/full_handshake_tx.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_buf.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_dff.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_pulse.v')
 
     # 编译
     process = subprocess.Popen(iverilog_cmd)
