@@ -23,7 +23,8 @@
 
 ## PWM 外设的添加
 按如下要求添加 PWM 外设:
-<img src="./figs/pwm.png"  width="420" />
+
+<img src="./figs/pwm.png"  width="480" />
 
 - 在 [rib.v](./rtl/core/rib.v) 中给 rib 总线添加一个 slave interface, 按序号分配为 slave_6, 起始地址映射到 0x6000_0000
 
