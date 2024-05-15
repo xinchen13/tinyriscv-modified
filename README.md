@@ -33,5 +33,10 @@
 - 编写软件库 [pwm.h](./tests/example/include/pwm.h), 定义寄存器地址和读写宏
 - 测试用例见 [pwm/](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
 
+## I2C 外设的添加
+按如下要求添加 I2C 外设:
+
+<img src="./figs/i2c.png"  width="520" />
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
