@@ -31,7 +31,7 @@
 - 顶层模块中添加总线子模块接口, 例化 pwm 模块
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
 - 编写软件库 [pwm.h](./tests/example/include/pwm.h), 定义寄存器地址和读写宏
-- 测试用例见 [pwm](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
+- 测试用例见 [pwm/](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
