@@ -16,7 +16,7 @@ I2C (Inter-Integrated Circuit, IIC) 是一种串行通信协议, 属于半双工
 最小配置: (Single controller)
 - START condition
 - STOP condition
-- Acknowledge
+- Acknowledge/Not Acknowledge
 - 7-bit target address
 
 ## 工作流程与时序
@@ -65,6 +65,18 @@ R/W 为低电平表示写 (WRITE), 高电平表示读 (READ)
 
 如果在一次传输结束后控制器仍然希望在总线上通信, 则它可以生成重复的 START 条件 (Sr) 并寻址另一个目标, 而无需先生成 STOP 条件. 在这样的传输中允许读/写格式的各种组合
 
+## 常见工作模式
+### 控制器写从机
+
+<img src="../figs/i2c_mode1.png"  width="520" />
+
+### 控制器读从机
+
+<img src="../figs/i2c_mode2.png"  width="520" />
+
+### 读写混合
+
+<img src="../figs/i2c_mode3.png"  width="520" />
 
 ## 时钟与通信速率
 IIC 协议的时钟频率是可以根据具体应用和设备支持的情况进行调节, 支持的速率如下: 
