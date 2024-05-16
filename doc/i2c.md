@@ -59,7 +59,7 @@ SDA 线上按8位 byte 传输数据, 每次传输可以传输的字节数是不�
 
 在开始条件后, 传输的第一个字节包括 7-bit 目标地址 address 和 1-bit 读写指示位 R/W:
 
-<img src="../figs/i2c_complete.png"  width="300" />
+<img src="../figs/i2c_1st_bit.png"  width="300" />
 
 R/W 为低电平表示写 (WRITE), 高电平表示读 (READ)
 
