@@ -38,5 +38,8 @@
 
 <img src="./figs/i2c.png"  width="520" />
 
+- I2C 协议: [i2c.md](./doc/i2c.md)
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
+- I2C协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
