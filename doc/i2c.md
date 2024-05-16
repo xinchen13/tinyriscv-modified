@@ -33,7 +33,11 @@ I2C (Inter-Integrated Circuit, IIC) 是一种串行通信协议, 属于半双工
 ### 数据有效性
 SDA 线上的数据必须在时钟的 HIGH 周期内保持稳定; 只有当 SCL 线上的时钟信号为 LOW 时, 数据线的状态才能改变. 即为传输的每个数据位生成一个时钟脉冲, 如下所示:
 
-<img src="../figs/i2c_timing1.png"  width="520" />
+<img src="../figs/i2c_timing1.png"  width="480" />
+
+### 数据格式
+
+<img src="../figs/i2c_byte_format.png"  width="640" />
 
 ## 时钟与通信速率
 IIC 协议的时钟频率是可以根据具体应用和设备支持的情况进行调节, 支持的速率如下: 
