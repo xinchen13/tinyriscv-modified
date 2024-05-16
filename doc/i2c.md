@@ -76,7 +76,7 @@ R/W 为低电平表示写 (WRITE), 高电平表示读 (READ)
 
 ### 读写混合
 
-<img src="../figs/i2c_mode3.png"  width="520" />
+<img src="../figs/i2c_mode3.png"  width="620" />
 
 ## 时钟与通信速率
 IIC 协议的时钟频率是可以根据具体应用和设备支持的情况进行调节, 支持的速率如下: 
