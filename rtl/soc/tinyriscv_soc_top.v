@@ -43,7 +43,10 @@ module tinyriscv_soc_top(
     output wire spi_ss,      // SPI SS引脚
     output wire spi_clk,      // SPI CLK引脚
 
-    output wire [3:0] PWM_o     // pwm 输出
+    output wire [3:0] PWM_o,     // pwm 输出
+
+    output wire io_scl,
+    inout wire io_sda
 
     );
 
@@ -117,6 +120,12 @@ module tinyriscv_soc_top(
     wire[`MemBus] s6_data_o;
     wire[`MemBus] s6_data_i;
     wire s6_we_o;
+
+    // slave 7 interface: pwm
+    wire[`MemAddrBus] s7_addr_o;
+    wire[`MemBus] s7_data_o;
+    wire[`MemBus] s7_data_i;
+    wire s7_we_o;
 
     // rib
     wire rib_hold_flag_o;
@@ -299,6 +308,18 @@ module tinyriscv_soc_top(
         .pwm_o(PWM_o)
     );
 
+    // i2c模块例化
+    i2c i2c_0(
+        .clk(clk),
+        .rst_n(rst),
+        .data_i(s7_data_o),
+        .addr_i(s7_addr_o),
+        .we_i(s7_we_o),
+        .data_o(s7_data_i),
+        .scl(io_scl),
+        .sda(io_sda)
+    );
+
     // rib模块例化
     rib u_rib(
         .clk(clk),
@@ -373,6 +394,12 @@ module tinyriscv_soc_top(
         .s6_data_o(s6_data_o),
         .s6_data_i(s6_data_i),
         .s6_we_o(s6_we_o),
+
+        // slave 7 interface
+        .s7_addr_o(s7_addr_o),
+        .s7_data_o(s7_data_o),
+        .s7_data_i(s7_data_i),
+        .s7_we_o(s7_we_o),
 
         .hold_flag_o(rib_hold_flag_o)
     );

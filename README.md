@@ -28,7 +28,7 @@
 
 - 在 [rib.v](./rtl/core/rib.v) 中给 rib 总线添加一个 slave interface, 按序号分配为 slave_6, 起始地址映射到 0x6000_0000
 - `rtl/utils/` 路径下添加 [gen_pulse.v](./rtl/utils/gen_pulse.v) 模块, 实现脉冲生成; `rtl/perips/` 中添加 [pwm.v](./rtl/perips/pwm.v) 外设, 完成寄存器定义, 读写寄存器, 例化 gen_pulse 模块
-- 顶层模块中添加总线子模块接口, 例化 pwm 模块
+- 顶层模块中添加总线子模块接口, 例化 pwm 模块, 引出 io
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
 - 编写软件库 [pwm.h](./tests/example/include/pwm.h), 定义寄存器地址和读写宏
 - 测试用例见 [pwm/](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
@@ -38,7 +38,16 @@
 
 <img src="./figs/i2c.png"  width="520" />
 
-- I2C 协议: [i2c.md](./doc/i2c.md)
+- I2C protocol 整理: [i2c.md](./doc/i2c.md)
+- `rtl/perips/` 路径下添加 [i2c.v](./rtl/perips/i2c.v), 实现了 iic 的读功能, 默认的读取地址是 ALINX AX7035 中的 LM75 温度传感器地址 8'b10110001, 实现的功能是当 iic_en 寄存器被写入 32'h1 时, 将 iic_device_addr 处的温度寄存器值读取到 iic_read_data 的低16位, 读取 LM75 温度寄存器的时序如下:
+
+<img src="./figs/lm75_timing.png"  width="600" />
+
+- 在 [rib.v](./rtl/core/rib.v) 中给 rib 总线添加一个 slave interface, 按序号分配为 slave_7, 起始地址映射到 0x7000_0000
+- 顶层模块中添加总线子模块接口, 例化 i2c 模块, 引出 io
+- 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
+- 编写软件库 [i2c.h](./tests/example/include/i2c.h), 定义寄存器地址和读写宏
+- 测试用例见 [i2c/](./tests/example/i2c/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data` 运行
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
