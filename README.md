@@ -39,7 +39,7 @@
 <img src="./figs/i2c.png"  width="520" />
 
 - I2C protocol 整理: [i2c.md](./doc/i2c.md)
-- `rtl/perips/` 路径下添加 [i2c.v](./rtl/perips/i2c.v), 实现了 iic 的读功能, 默认的读取地址是 ALINX AX7035 中的 LM75 温度传感器地址 8'b10110001, 实现的功能是当 iic_en 寄存器被写入 32'h1 时, 将 iic_device_addr 处的温度寄存器值读取到 iic_read_data 的低16位, 读取 LM75 温度寄存器的时序如下:
+- `rtl/perips/` 路径下添加 [i2c.v](./rtl/perips/i2c.v), 实现了 iic 的读功能, 默认的读取地址是 ALINX AX7035 中的 LM75 温度传感器地址 8'b10010001, 实现的功能是当 iic_en 寄存器被写入 32'h1 时, 将 iic_device_addr 处的温度寄存器值读取到 iic_read_data 的低16位, 读取 LM75 温度寄存器的时序如下:
 
 <img src="./figs/lm75_timing.png"  width="800" />
 
