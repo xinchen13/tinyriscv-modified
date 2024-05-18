@@ -22,7 +22,6 @@
 - 添加了脚本文件 [sim_data_file.py](./sim/sim_data_file.py), 在 `sim/` 目录下可以使用如下命令指定转换好的 `xxx.data` 文件作为测试向量: `python sim_data_file.py path_of_the_target_mem_file.data inst.data`
 
 ## PWM 外设的添加
-按如下要求添加 PWM 外设:
 
 <img src="./figs/pwm.png"  width="520" />
 
@@ -34,7 +33,6 @@
 - 测试用例见 [pwm/](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
 
 ## I2C 外设的添加
-按如下要求添加 I2C 外设:
 
 <img src="./figs/i2c.png"  width="520" />
 
@@ -50,6 +48,8 @@
 - 测试用例见 [i2c/](./tests/example/i2c/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data` 运行
 
 ## 拓展指令: Send ID
+
+<img src="./figs/send_id.png"  width="600" />
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
