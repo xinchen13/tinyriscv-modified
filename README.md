@@ -49,6 +49,8 @@
 - 编写软件库 [i2c.h](./tests/example/include/i2c.h), 定义寄存器地址和读写宏
 - 测试用例见 [i2c/](./tests/example/i2c/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data` 运行
 
+## 拓展指令: Send ID
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
 - I2C协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
