@@ -162,3 +162,7 @@
 `define RegWidth 32
 `define RegNum 32        // reg num
 `define RegNumLog2 5
+
+
+// sID
+`define INST_TYPE_EXT 7'b0101111

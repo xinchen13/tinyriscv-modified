@@ -51,6 +51,11 @@
 
 <img src="./figs/send_id.png"  width="600" />
 
+- 为 [uart.v](./rtl/perips/uart.v) 添加一个状态机, 当寄存器 uart_ctrl[2] 和 uart_ctrl[0] 都被写入 1 时, 触发一次该状态机循环, 通过 uart 输出一次学号. 在此基础上该指令的运行过程简化一次访存: 在地址 0x30000000 处写入一次 0x00000005
+- 在 [defines.v](./rtl/core/defines.v) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
+- 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/sID/sID_inst.data inst.data`
+
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
 - I2C协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)

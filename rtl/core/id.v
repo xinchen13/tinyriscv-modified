@@ -83,6 +83,14 @@ module id(
         op2_jump_o = `ZeroWord;
 
         case (opcode)
+            `INST_TYPE_EXT: begin
+                reg_we_o = `WriteDisable;
+                reg_waddr_o = rd;
+                reg1_raddr_o = rs1;
+                reg2_raddr_o = `ZeroReg;
+                op1_o = 32'h30000000;
+                op2_o = `ZeroReg;
+            end
             `INST_TYPE_I: begin
                 case (funct3)
                     `INST_ADDI, `INST_SLTI, `INST_SLTIU, `INST_XORI, `INST_ORI, `INST_ANDI, `INST_SLLI, `INST_SRI: begin

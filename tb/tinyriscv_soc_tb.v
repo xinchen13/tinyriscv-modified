@@ -488,7 +488,7 @@ module tinyriscv_soc_tb;
 
     // sim timeout
     initial begin
-        #500000
+        #1000000
         $display("Time Out.");
         $finish;
     end

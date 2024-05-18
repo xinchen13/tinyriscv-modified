@@ -700,6 +700,17 @@ module ex(
                     end
                 endcase
             end
+            `INST_TYPE_EXT: begin
+                jump_flag = `JumpDisable;
+                hold_flag = `HoldDisable;
+                jump_addr = `ZeroWord;
+                reg_wdata = `ZeroWord;
+                mem_we = `WriteEnable;
+                mem_req = `RIB_REQ;
+                mem_waddr_o = op1_add_op2_res;
+                mem_raddr_o = op1_add_op2_res;
+                mem_wdata_o = 32'h00000005;
+            end
             `INST_TYPE_B: begin
                 case (funct3)
                     `INST_BEQ: begin

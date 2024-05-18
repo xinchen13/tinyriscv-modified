@@ -24,7 +24,7 @@ def main():
     vvp_cmd.append(r'out.vvp')
     process = subprocess.Popen(vvp_cmd)
     try:
-        process.wait(timeout=20)
+        process.wait(timeout=30)
     except subprocess.TimeoutExpired:
         print('!!!Fail, vvp exec timeout!!!')
 
