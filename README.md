@@ -58,6 +58,7 @@
 ## 拓展指令: Read Temperature
 
 <img src="./figs/rt.png"  width="600" />
+- 由于 iic 读取温度读数有延迟, 
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)

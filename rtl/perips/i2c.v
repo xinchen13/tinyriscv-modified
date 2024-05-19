@@ -14,11 +14,13 @@ module i2c(
     input wire[31:0] addr_i,
     input wire[31:0] data_i,
     output reg[31:0] data_o,
+    output wire int_sig_o,
 
     // device interface
     output wire scl,
     inout wire sda
 );
+    assign int_sig_o = (cstate != IDLE);
 
     // regs
     reg [31:0] iic_device_addr;  // the address of iic device   , 0x7001_0000
@@ -27,8 +29,12 @@ module i2c(
     localparam IIC_WRITE_DATA = 4'h2;
     reg [31:0] iic_read_data;   // iic read data regs           , 0x7003_0000
     localparam IIC_READ_DATA = 4'h3;
-    reg [31:0] iic_en;          // iic enable                   , 0x7004_0000
-    localparam IIC_EN = 4'h4;
+
+    wire iic_en;
+    
+    assign iic_en = (iic_read_data_valid == 1'b0) && (addr_i[19:16] == IIC_READ_DATA);
+
+    reg iic_read_data_valid;
 
     // get scl
     reg [2:0] cnt;
@@ -99,15 +105,17 @@ module i2c(
             sda_link <= 1'b0;
             num <= 4'd0;
             iic_read_data <= 16'd0;
+            iic_read_data_valid <= 1'b0;
         end
         else begin
             case (cstate)
                 IDLE: begin
                     sda_link <= 1'b1;    
                     sda_r <= 1'b1;
-                    if (iic_en[0]) begin 
+                    iic_read_data_valid <= 1'b0;
+                    if (iic_en) begin 
                         db_r <= iic_device_addr[7:0]; 
-                        cstate <= START;        
+                        cstate <= START;
                     end
                     else begin
                         cstate <= IDLE;
@@ -239,6 +247,7 @@ module i2c(
                     if (`SCL_HIG) begin
                         sda_r <= 1'b1;
                         cstate <= IDLE;
+                        iic_read_data_valid <= 1'b1;
                     end
                     else begin
                         cstate <= STOP;
@@ -255,7 +264,6 @@ module i2c(
             iic_device_addr <= 32'h00000091;
             iic_write_data <= 32'h0;
             iic_read_data <= 32'h0;
-            iic_en <= 32'b0;
         end
         else begin
             if (we_i == 1'b1) begin
@@ -268,9 +276,6 @@ module i2c(
                     end
                     IIC_READ_DATA: begin
                         iic_read_data <= data_i;
-                    end
-                    IIC_EN: begin
-                        iic_en <= data_i;
                     end
                     default: begin
                     end
@@ -294,9 +299,6 @@ module i2c(
                 end
                 IIC_READ_DATA: begin
                     data_o = iic_read_data;
-                end
-                IIC_EN: begin
-                    data_o = iic_en;
                 end
                 default: begin
                     data_o = 32'h0;

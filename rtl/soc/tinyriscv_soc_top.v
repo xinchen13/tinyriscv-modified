@@ -121,7 +121,7 @@ module tinyriscv_soc_top(
     wire[`MemBus] s6_data_i;
     wire s6_we_o;
 
-    // slave 7 interface: pwm
+    // slave 7 interface: i2c
     wire[`MemAddrBus] s7_addr_o;
     wire[`MemBus] s7_data_o;
     wire[`MemBus] s7_data_i;
@@ -149,7 +149,7 @@ module tinyriscv_soc_top(
     wire[31:0] gpio_ctrl;
     wire[31:0] gpio_data;
 
-    assign int_flag = {7'h0, timer0_int};
+    assign int_flag = {6'h0, i2c0_int, timer0_int};
 
     // 低电平点亮LED
     // 低电平表示已经halt住CPU
@@ -309,6 +309,7 @@ module tinyriscv_soc_top(
     );
 
     // i2c模块例化
+    wire i2c0_int;
     i2c i2c_0(
         .clk(clk),
         .rst_n(rst),
@@ -317,7 +318,8 @@ module tinyriscv_soc_top(
         .we_i(s7_we_o),
         .data_o(s7_data_i),
         .scl(io_scl),
-        .sda(io_sda)
+        .sda(io_sda),
+        .int_sig_o(i2c0_int)
     );
 
     // rib模块例化
