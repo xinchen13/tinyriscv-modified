@@ -55,6 +55,9 @@
 - 在 [defines.v](./rtl/core/defines.v) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
 - 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/sID/sID_inst.data inst.data`
 
+## 拓展指令: Read Temperature
+
+<img src="./figs/rt.png"  width="600" />
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
