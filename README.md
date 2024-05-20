@@ -58,7 +58,10 @@
 ## 拓展指令: Read Temperature
 
 <img src="./figs/rt.png"  width="600" />
-- 由于 iic 读取温度读数有延迟, 
+
+- 指令功能可以等效为一次访存, 但由于 i2c 读取温度读数有延迟, 需要为 i2c 的访问增加握手信号: 在 [ex.v](./rtl/core/ex.v) 中运行该指令会向外设发送 req 信号, 等待过程中暂停流水线; ack 到达握手成功后重启流水线
+- 由于 tinyriscv 原来的实现中暂停流水线使用的 hold 信号会默认产生气泡, 造成指令丢失, 因此修改了流水线寄存器 [pc_reg.v](./rtl/core/pc_reg.v), [if_id.v](./rtl/core/if_id.v) 和 [id_ex.v](./rtl/core/id_ex.v), 当检测到 i2c 暂停流水线后均保持当前的值 
+- 为新指令添加 opcode 与 funct3 的宏, 方便译码
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)

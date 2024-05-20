@@ -57,6 +57,7 @@ module tinyriscv_soc_top(
     wire[`MemBus] m0_data_o;
     wire m0_req_i;
     wire m0_we_i;
+    wire m0_ack_o;
 
     // master 1 interface
     wire[`MemAddrBus] m1_addr_i;
@@ -126,6 +127,8 @@ module tinyriscv_soc_top(
     wire[`MemBus] s7_data_o;
     wire[`MemBus] s7_data_i;
     wire s7_we_o;
+    wire s7_ack_i;
+    wire s7_req_o;
 
     // rib
     wire rib_hold_flag_o;
@@ -149,7 +152,7 @@ module tinyriscv_soc_top(
     wire[31:0] gpio_ctrl;
     wire[31:0] gpio_data;
 
-    assign int_flag = {6'h0, i2c0_int, timer0_int};
+    assign int_flag = {7'h0, timer0_int};
 
     // 低电平点亮LED
     // 低电平表示已经halt住CPU
@@ -175,6 +178,7 @@ module tinyriscv_soc_top(
         .rib_ex_data_o(m0_data_i),
         .rib_ex_req_o(m0_req_i),
         .rib_ex_we_o(m0_we_i),
+        .rib_ex_ack_i(m0_ack_o),
 
         .rib_pc_addr_o(m1_addr_i),
         .rib_pc_data_i(m1_data_o),
@@ -309,7 +313,6 @@ module tinyriscv_soc_top(
     );
 
     // i2c模块例化
-    wire i2c0_int;
     i2c i2c_0(
         .clk(clk),
         .rst_n(rst),
@@ -319,7 +322,8 @@ module tinyriscv_soc_top(
         .data_o(s7_data_i),
         .scl(io_scl),
         .sda(io_sda),
-        .int_sig_o(i2c0_int)
+        .read_data_ready_o(s7_ack_i),
+        .req_i(s7_req_o)
     );
 
     // rib模块例化
@@ -333,6 +337,7 @@ module tinyriscv_soc_top(
         .m0_data_o(m0_data_o),
         .m0_req_i(m0_req_i),
         .m0_we_i(m0_we_i),
+        .m0_ack_o(m0_ack_o),
 
         // master 1 interface
         .m1_addr_i(m1_addr_i),
@@ -402,6 +407,8 @@ module tinyriscv_soc_top(
         .s7_data_o(s7_data_o),
         .s7_data_i(s7_data_i),
         .s7_we_o(s7_we_o),
+        .s7_req_o(s7_req_o),
+        .s7_ack_i(s7_ack_i),
 
         .hold_flag_o(rib_hold_flag_o)
     );

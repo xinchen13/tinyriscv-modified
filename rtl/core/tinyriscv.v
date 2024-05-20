@@ -27,6 +27,7 @@ module tinyriscv(
     output wire[`MemBus] rib_ex_data_o,        // 写入外设的数据
     output wire rib_ex_req_o,                  // 访问外设请求
     output wire rib_ex_we_o,                   // 写外设标志
+    input wire rib_ex_ack_i,
 
     output wire[`MemAddrBus] rib_pc_addr_o,    // 取指地址
     input wire[`MemBus] rib_pc_data_i,         // 取到的指令内容
@@ -91,10 +92,12 @@ module tinyriscv(
     wire[`MemAddrBus] ex_mem_waddr_o;
     wire ex_mem_we_o;
     wire ex_mem_req_o;
+    wire ex_mem_ack_i;
     wire[`RegBus] ex_reg_wdata_o;
     wire ex_reg_we_o;
     wire[`RegAddrBus] ex_reg_waddr_o;
     wire ex_hold_flag_o;
+    wire ex_stall_o;
     wire ex_jump_flag_o;
     wire[`InstAddrBus] ex_jump_addr_o;
     wire ex_div_start_o;
@@ -143,6 +146,7 @@ module tinyriscv(
     assign rib_ex_data_o = ex_mem_wdata_o;
     assign rib_ex_req_o = ex_mem_req_o;
     assign rib_ex_we_o = ex_mem_we_o;
+    assign ex_mem_ack_i = rib_ex_ack_i;
 
     assign rib_pc_addr_o = pc_pc_o;
 
@@ -154,6 +158,7 @@ module tinyriscv(
         .jtag_reset_flag_i(jtag_reset_flag_i),
         .pc_o(pc_pc_o),
         .hold_flag_i(ctrl_hold_flag_o),
+        .stall_flag_i(ex_stall_o),
         .jump_flag_i(ctrl_jump_flag_o),
         .jump_addr_i(ctrl_jump_addr_o)
     );
@@ -218,6 +223,7 @@ module tinyriscv(
         .int_flag_i(int_i),
         .int_flag_o(if_int_flag_o),
         .hold_flag_i(ctrl_hold_flag_o),
+        .stall_flag_i(ex_stall_o),
         .inst_o(if_inst_o),
         .inst_addr_o(if_inst_addr_o)
     );
@@ -260,6 +266,7 @@ module tinyriscv(
         .reg1_rdata_i(id_reg1_rdata_o),
         .reg2_rdata_i(id_reg2_rdata_o),
         .hold_flag_i(ctrl_hold_flag_o),
+        .stall_flag_i(ex_stall_o),
         .inst_o(ie_inst_o),
         .inst_addr_o(ie_inst_addr_o),
         .reg_we_o(ie_reg_we_o),
@@ -284,6 +291,7 @@ module tinyriscv(
 
     // ex模块例化
     ex u_ex(
+        .clk(clk),
         .rst(rst),
         .inst_i(ie_inst_o),
         .inst_addr_i(ie_inst_addr_o),
@@ -301,10 +309,12 @@ module tinyriscv(
         .mem_waddr_o(ex_mem_waddr_o),
         .mem_we_o(ex_mem_we_o),
         .mem_req_o(ex_mem_req_o),
+        .mem_ack_i(ex_mem_ack_i),
         .reg_wdata_o(ex_reg_wdata_o),
         .reg_we_o(ex_reg_we_o),
         .reg_waddr_o(ex_reg_waddr_o),
         .hold_flag_o(ex_hold_flag_o),
+        .stall(ex_stall_o),
         .jump_flag_o(ex_jump_flag_o),
         .jump_addr_o(ex_jump_addr_o),
         .int_assert_i(clint_int_assert_o),

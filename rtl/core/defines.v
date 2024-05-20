@@ -164,5 +164,8 @@
 `define RegNumLog2 5
 
 
-// sID
+// ext inst
 `define INST_TYPE_EXT 7'b0101111
+`define INST_SID 3'b000
+`define INST_RT 3'b001
+`define INST_IF 3'b010

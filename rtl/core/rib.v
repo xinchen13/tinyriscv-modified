@@ -29,6 +29,7 @@ module rib(
     output reg[`MemBus] m0_data_o,         // 主设备0读取到的数据
     input wire m0_req_i,                   // 主设备0访问请求标志
     input wire m0_we_i,                    // 主设备0写标志
+    output wire m0_ack_o,
 
     // master 1 interface
     input wire[`MemAddrBus] m1_addr_i,     // 主设备1读、写地址
@@ -98,11 +99,15 @@ module rib(
     output reg[`MemBus] s7_data_o,         // 从设备7写数据
     input wire[`MemBus] s7_data_i,         // 从设备7读取到的数据
     output reg s7_we_o,                    // 从设备7写标志
+    output wire s7_req_o,
+    input wire s7_ack_i,
 
     output reg hold_flag_o                 // 暂停流水线标志
 
     );
 
+    assign m0_ack_o = s7_ack_i;
+    assign s7_req_o = m0_req_i;
 
     // 访问地址的最高4位决定要访问的是哪一个从设备
     // 因此最多支持16个从设备

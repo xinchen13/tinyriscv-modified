@@ -84,12 +84,31 @@ module id(
 
         case (opcode)
             `INST_TYPE_EXT: begin
-                reg_we_o = `WriteDisable;
-                reg_waddr_o = rd;
-                reg1_raddr_o = rs1;
-                reg2_raddr_o = `ZeroReg;
-                op1_o = 32'h30000000;
-                op2_o = `ZeroReg;
+                case (funct3)
+                    `INST_SID: begin
+                        reg_we_o = `WriteDisable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = `ZeroReg;
+                        op1_o = 32'h30000000;
+                        op2_o = `ZeroReg;
+                    end
+                    `INST_RT: begin
+                        reg_we_o = `WriteEnable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = `ZeroReg;
+                        op1_o = 32'h70030000;
+                        op2_o = `ZeroReg;
+                    end
+                    default: begin
+                        reg_we_o = `WriteDisable;
+                        reg_waddr_o = `ZeroReg;
+                        reg1_raddr_o = `ZeroReg;
+                        reg2_raddr_o = `ZeroReg;
+                    end
+                endcase
+
             end
             `INST_TYPE_I: begin
                 case (funct3)

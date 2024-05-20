@@ -202,6 +202,7 @@ module uart(
             uart_rx <= 32'h0;
             uart_baud <= BAUD_115200;
             tx_data_valid <= 1'b0;
+            tx_data <= 8'b0;
         end else begin
             if (we_i == 1'b1) begin
                 case (addr_i[7:0])
