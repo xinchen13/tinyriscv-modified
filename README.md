@@ -64,6 +64,11 @@
 - 为新指令添加 opcode 与 funct3 的宏, 方便译码
 - 运行指令测试: `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data`, 由于没有为 i2c 写测试模型, 因此 i2c 读到的是的是高阻态
 
+## 拓展指令: Integrated & Fire
+
+<img src="./figs/if.png"  width="600" />
+
+
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
 - I2C协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
