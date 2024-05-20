@@ -68,6 +68,9 @@
 
 <img src="./figs/if.png"  width="600" />
 
+- 直接在驿码和执行模块添加指令对应操作即可
+- 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
+
 
 ## 参考资料
 - 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)

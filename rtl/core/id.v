@@ -67,6 +67,8 @@ module id(
     wire[4:0] rs1 = inst_i[19:15];
     wire[4:0] rs2 = inst_i[24:20];
 
+    wire[11:0] imm = inst_i[31:20];
+
 
     always @ (*) begin
         inst_o = inst_i;
@@ -100,6 +102,19 @@ module id(
                         reg2_raddr_o = `ZeroReg;
                         op1_o = 32'h70030000;
                         op2_o = `ZeroReg;
+                    end
+                    `INST_IF: begin
+                        reg_we_o = `WriteEnable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = 5'd31;
+                        op1_o = reg1_rdata_i;
+                        if (imm == 12'b0) begin
+                            op2_o = reg2_rdata_i;
+                        end
+                        else begin
+                            op2_o = {{20{inst_i[31]}}, inst_i[31:20]};
+                        end
                     end
                     default: begin
                         reg_we_o = `WriteDisable;

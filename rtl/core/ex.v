@@ -746,6 +746,34 @@ module ex(
                             mem_wdata_o = `ZeroWord;
                         end
                     end
+                    `INST_IF: begin
+                        jump_flag = `JumpDisable;
+                        hold_flag = `HoldDisable;
+                        jump_addr = `ZeroWord;
+                        if (inst_i[31:20] == 12'b0) begin
+                            if (op1_ge_op2_unsigned) begin
+                                mem_wdata_o = op1_i[7:0];
+                                mem_raddr_o = `ZeroWord;
+                                mem_waddr_o = 32'h3000000c;
+                                mem_we = `WriteEnable;
+                                reg_wdata = `ZeroWord;
+                            end
+                            else begin
+                                mem_wdata_o = `ZeroWord;
+                                mem_raddr_o = `ZeroWord;
+                                mem_waddr_o = `ZeroWord;
+                                mem_we = `WriteDisable;
+                                reg_wdata = op1_i;
+                            end
+                        end
+                        else begin
+                            mem_wdata_o = `ZeroWord;
+                            mem_raddr_o = `ZeroWord;
+                            mem_waddr_o = `ZeroWord;
+                            mem_we = `WriteDisable;
+                            reg_wdata = op1_add_op2_res;
+                        end
+                    end
                     default: begin
                         jump_flag = `JumpDisable;
                         hold_flag = `HoldDisable;
