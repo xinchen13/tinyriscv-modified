@@ -313,6 +313,8 @@ module tinyriscv_soc_top(
     );
 
     // pwm模块例化
+    wire [3:0] PWM_temp;
+    assign PWM_o = PWM_temp[2:0];
     pwm pwm_0(
         .clk(clk),
         .rst(rst),
@@ -322,8 +324,6 @@ module tinyriscv_soc_top(
         .data_o(s6_data_i),
         .pwm_o(PWM_temp)
     );
-    wire [3:0] PWM_temp;
-    assign PWM_o = PWM_temp[2:0];
 
     // i2c模块例化
     i2c i2c_0(

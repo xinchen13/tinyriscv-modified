@@ -51,7 +51,7 @@
 
 <img src="./figs/send_id.png"  width="600" />
 
-- 为 [uart.v](./rtl/perips/uart.v) 添加一个状态机, 当寄存器 uart_ctrl[2] 和 uart_ctrl[0] 都被写入 1 时, 触发一次该状态机循环, 通过 uart 输出一次学号. 在此基础上该指令的运行过程简化为一次访存: 在地址 0x30000000 处写入一次 0x00000005
+- 修改 [uart.v](./rtl/perips/uart.v) 的写寄存器逻辑 (相当于添加了一个状态机器), 当寄存器 uart_ctrl[2] 和 uart_ctrl[0] 都被写入 1 时, 触发一次输出学号, 通过 uart 输出一次学号. 在此基础上该指令的运行过程简化为一次访存: 在地址 0x30000000 处写入一次 0x00000005
 - 在 [defines.v](./rtl/core/defines.v) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
 - 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/sID/sID_inst.data inst.data`
 
