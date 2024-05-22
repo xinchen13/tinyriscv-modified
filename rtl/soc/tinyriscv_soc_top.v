@@ -22,33 +22,47 @@ module tinyriscv_soc_top(
     input wire clk,
     input wire rst,
 
-    output reg over,         // 测试是否完成信号
     output reg succ,         // 测试是否成功信号
-
-    output wire halted_ind,  // jtag是否已经halt住CPU信号
 
     input wire uart_debug_pin, // 串口下载使能引脚
 
     output wire uart_tx_pin, // UART发送引脚
     input wire uart_rx_pin,  // UART接收引脚
+
     inout wire[15:0] gpio,    // GPIO引脚
-
-    input wire jtag_TCK,     // JTAG TCK引脚
-    input wire jtag_TMS,     // JTAG TMS引脚
-    input wire jtag_TDI,     // JTAG TDI引脚
-    output wire jtag_TDO,    // JTAG TDO引脚
-
-    input wire spi_miso,     // SPI MISO引脚
-    output wire spi_mosi,    // SPI MOSI引脚
-    output wire spi_ss,      // SPI SS引脚
-    output wire spi_clk,      // SPI CLK引脚
 
     output wire [3:0] PWM_o,     // pwm 输出
 
     output wire io_scl,
     inout wire io_sda
 
+    // input wire jtag_TCK,     // JTAG TCK引脚
+    // input wire jtag_TMS,     // JTAG TMS引脚
+    // input wire jtag_TDI,     // JTAG TDI引脚
+    // output wire jtag_TDO,    // JTAG TDO引脚
+    // input wire spi_miso,     // SPI MISO引脚
+    // output wire spi_mosi,    // SPI MOSI引脚
+    // output wire spi_ss,      // SPI SS引脚
+    // output wire spi_clk,      // SPI CLK引脚
     );
+
+    // make external signals internal
+    reg over;               // 测试是否完成信号
+    wire halted_ind;        // jtag是否已经halt住CPU信号
+
+    wire jtag_TCK;          // JTAG TCK引脚
+    assign jtag_TCK = 1'b0;
+    wire jtag_TMS;          // JTAG TMS引脚
+    assign jtag_TMS = 1'b0;
+    wire jtag_TDI;          // JTAG TDI引脚
+    assign jtag_TDI = 1'b0;
+    wire jtag_TDO;          // JTAG TDO引脚
+
+    wire spi_miso;          // SPI MISO引脚
+    assign spi_miso = 1'b0;
+    wire spi_mosi;          // SPI MOSI引脚
+    wire spi_ss;            // SPI SS引脚
+    wire spi_clk;           // SPI CLK引脚
 
 
     // master 0 interface
