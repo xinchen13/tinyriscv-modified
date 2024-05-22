@@ -31,7 +31,7 @@ module tinyriscv_soc_top(
 
     inout wire[15:0] gpio,    // GPIO引脚
 
-    output wire [3:0] PWM_o,     // pwm 输出
+    output wire [2:0] PWM_o,     // pwm 输出
 
     output wire io_scl,
     inout wire io_sda
@@ -49,7 +49,6 @@ module tinyriscv_soc_top(
     // make external signals internal
     reg over;               // 测试是否完成信号
     wire halted_ind;        // jtag是否已经halt住CPU信号
-
     wire jtag_TCK;          // JTAG TCK引脚
     assign jtag_TCK = 1'b0;
     wire jtag_TMS;          // JTAG TMS引脚
@@ -57,13 +56,11 @@ module tinyriscv_soc_top(
     wire jtag_TDI;          // JTAG TDI引脚
     assign jtag_TDI = 1'b0;
     wire jtag_TDO;          // JTAG TDO引脚
-
     wire spi_miso;          // SPI MISO引脚
     assign spi_miso = 1'b0;
     wire spi_mosi;          // SPI MOSI引脚
     wire spi_ss;            // SPI SS引脚
     wire spi_clk;           // SPI CLK引脚
-
 
     // master 0 interface
     wire[`MemAddrBus] m0_addr_i;
@@ -323,8 +320,10 @@ module tinyriscv_soc_top(
         .addr_i(s6_addr_o),
         .we_i(s6_we_o),
         .data_o(s6_data_i),
-        .pwm_o(PWM_o)
+        .pwm_o(PWM_temp)
     );
+    wire [3:0] PWM_temp;
+    assign PWM_o = PWM_temp[2:0];
 
     // i2c模块例化
     i2c i2c_0(
