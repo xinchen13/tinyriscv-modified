@@ -100,7 +100,7 @@ module i2c(
             sda_r <= 1'b1;
             sda_link <= 1'b0;
             num <= 4'd0;
-            iic_read_data <= 16'd0;
+            iic_read_data <= 32'h0;
             read_data_ready_o <= 1'b0;
         end
         else begin
@@ -259,7 +259,6 @@ module i2c(
         if (~rst_n) begin
             iic_device_addr <= 32'h00000091;
             iic_write_data <= 32'h0;
-            iic_read_data <= 32'h0;
             iic_en <= 32'h0;
         end
         else begin
@@ -270,9 +269,6 @@ module i2c(
                     end
                     IIC_WRITE_DATA: begin
                         iic_write_data <= data_i;
-                    end
-                    IIC_READ_DATA: begin
-                        iic_read_data <= data_i;
                     end
                     IIC_EN: begin
                         iic_en <= data_i;
