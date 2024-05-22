@@ -90,8 +90,8 @@ module uart(
     assign tx_pin = tx_reg;
 
 
+    // send ID: 0x32, 0x30, 0x32, 0x33, 0x32, 0x31, 0x31, 0x30, 0x36, 0x33
     reg [3:0] id_state;
-    // 0x32, 0x30, 0x32, 0x33, 0x32, 0x31, 0x31, 0x30, 0x36, 0x33
     localparam ID_IDLE     = 4'd1;
     localparam ID_SEND_1   = 4'd2;
     localparam ID_SEND_2   = 4'd3;
@@ -102,96 +102,6 @@ module uart(
     localparam ID_SEND_7   = 4'd8;
     localparam ID_SEND_8   = 4'd9;
     localparam ID_SEND_9   = 4'd10;
-    
-    // send ID
-    always @ (posedge clk) begin
-        if (!rst) begin
-            id_state <= ID_IDLE;
-        end
-        else if ((uart_ctrl[2] == 1'b1) && (uart_ctrl[0] == 1'b1)) begin
-            if (id_state == ID_IDLE) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h32;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_1;
-                end
-            end 
-            else if (id_state == ID_SEND_1) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h30;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_2;
-                end
-            end
-            else if (id_state == ID_SEND_2) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h32;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_3;
-                end
-            end
-            else if (id_state == ID_SEND_3) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h33;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_4;
-                end
-            end
-            else if (id_state == ID_SEND_4) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h32;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_5;
-                end
-            end
-            else if (id_state == ID_SEND_5) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h31;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_6;
-                end
-            end
-            else if (id_state == ID_SEND_6) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h31;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_7;
-                end
-            end
-            else if (id_state == ID_SEND_7) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h30;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_8;
-                end
-            end
-            else if (id_state == ID_SEND_8) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h36;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_SEND_9;
-                end
-            end
-            else if (id_state == ID_SEND_9) begin
-                if (uart_status[0] == 1'b0) begin
-                    tx_data <= 32'h33;
-                    uart_status[0] <= 1'b1;
-                    tx_data_valid <= 1'b1;
-                    id_state <= ID_IDLE;
-                    uart_ctrl <= 32'h0;
-                end
-            end
-        end
-    end
 
 
     // 写寄存器
@@ -202,8 +112,9 @@ module uart(
             uart_rx <= 32'h0;
             uart_baud <= BAUD_115200;
             tx_data_valid <= 1'b0;
-            tx_data <= 8'b0;
-        end else begin
+            id_state <= ID_IDLE;
+        end 
+        else begin
             if (we_i == 1'b1) begin
                 case (addr_i[7:0])
                     UART_CTRL: begin
@@ -223,10 +134,128 @@ module uart(
                         end
                     end
                 endcase
-            end else begin
-                if (~uart_ctrl[2]) begin
-                    tx_data_valid <= 1'b0;
+            end 
+
+            else if ((uart_ctrl[2] == 1'b1) && (uart_ctrl[0] == 1'b1)) begin
+                if (id_state == ID_IDLE) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_1;
+                    end
+                    else begin
+                        id_state <= ID_IDLE;
+                    end
+                end 
+                else if (id_state == ID_SEND_1) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h30;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_2;
+                    end
+                    else begin
+                        id_state <= ID_SEND_1;
+                    end
                 end
+                else if (id_state == ID_SEND_2) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_3;
+                    end
+                    else begin
+                        id_state <= ID_SEND_2;
+                    end
+                end
+                else if (id_state == ID_SEND_3) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h33;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_4;
+                    end
+                    else begin
+                        id_state <= ID_SEND_3;
+                    end
+                end
+                else if (id_state == ID_SEND_4) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_5;
+                    end
+                    else begin
+                        id_state <= ID_SEND_4;
+                    end
+                end
+                else if (id_state == ID_SEND_5) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h31;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_6;
+                    end
+                    else begin
+                        id_state <= ID_SEND_5;
+                    end
+                end
+                else if (id_state == ID_SEND_6) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h31;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_7;
+                    end
+                    else begin
+                        id_state <= ID_SEND_6;
+                    end
+                end
+                else if (id_state == ID_SEND_7) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h30;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_8;
+                    end
+                    else begin
+                        id_state <= ID_SEND_7;
+                    end
+                end
+                else if (id_state == ID_SEND_8) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h36;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_9;
+                    end
+                    else begin
+                        id_state <= ID_SEND_8;
+                    end
+                end
+                else if (id_state == ID_SEND_9) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 32'h33;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_IDLE;
+                        uart_ctrl <= 32'h0;
+                    end
+                    else begin
+                        id_state <= ID_SEND_9;
+                    end
+                end
+
+                if (tx_data_ready == 1'b1) begin
+                    uart_status[0] <= 1'b0;
+                end
+            end
+
+            else begin
+                tx_data_valid <= 1'b0;
                 if (tx_data_ready == 1'b1) begin
                     uart_status[0] <= 1'b0;
                 end
