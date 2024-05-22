@@ -21,21 +21,14 @@ module tinyriscv_soc_top(
 
     input wire clk,
     input wire rst,
-
     output reg succ,         // 测试是否成功信号
-
     input wire uart_debug_pin, // 串口下载使能引脚
-
     output wire uart_tx_pin, // UART发送引脚
     input wire uart_rx_pin,  // UART接收引脚
-
     inout wire[15:0] gpio,    // GPIO引脚
-
     output wire [2:0] PWM_o,     // pwm 输出
-
     output wire io_scl,
     inout wire io_sda
-
     // input wire jtag_TCK,     // JTAG TCK引脚
     // input wire jtag_TMS,     // JTAG TMS引脚
     // input wire jtag_TDI,     // JTAG TDI引脚
