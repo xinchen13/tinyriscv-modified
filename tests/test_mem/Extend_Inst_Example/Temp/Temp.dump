@@ -7,7 +7,7 @@ Disassembly of section .init:
 00000000 <_start>:
    0:	10001197          	auipc	gp,0x10001
    4:	80018193          	addi	gp,gp,-2048 # 10000800 <__global_pointer$>
-   8:	81018113          	addi	sp,gp,-2032 # 10000010 <__freertos_irq_stack_top>
+   8:	84018113          	addi	sp,gp,-1984 # 10000040 <__freertos_irq_stack_top>
    c:	00000d13          	li	s10,0
   10:	00000d93          	li	s11,0
   14:	26000513          	li	a0,608
@@ -180,7 +180,7 @@ Disassembly of section .text:
 
 Disassembly of section .stack:
 
-0fffe010 <__freertos_irq_stack_top-0x2000>:
+0fffe040 <__freertos_irq_stack_top-0x2000>:
 	...
 
 Disassembly of section .riscv.attributes:

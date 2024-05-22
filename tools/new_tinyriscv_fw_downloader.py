@@ -198,7 +198,7 @@ def convert_data(filename):
 # 程序入口
 if __name__ == "__main__":
     if (len(sys.argv) != 3):
-        print('Usage: python ' + sys.argv[0] + ' COMx ' + 'bin_file')
+        print('Usage: python ' + sys.argv[0] + ' COMx ' + '.data file')
     else:
         convert_data(sys.argv[2])
         main(sys.argv[2]+'.bin')
