@@ -128,7 +128,6 @@ module rib(
     wire[3:0] req;
     reg[1:0] grant;
 
-
     // 主设备请求信号
     assign req = {m3_req_i, m2_req_i, m1_req_i, m0_req_i};
 
