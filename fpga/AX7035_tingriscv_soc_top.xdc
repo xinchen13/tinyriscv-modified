@@ -58,6 +58,9 @@ set_property PACKAGE_PIN M22 [get_ports io_scl]
 set_property IOSTANDARD LVCMOS33 [get_ports io_sda]
 set_property PACKAGE_PIN N22 [get_ports io_sda]
 
+set_property PULLUP true [get_ports io_sda]
+set_property PULLUP true [get_ports io_scl]
+
 # Debug 引脚
 set_property IOSTANDARD LVCMOS33 [get_ports uart_debug_pin]
 set_property PACKAGE_PIN M13 [get_ports uart_debug_pin]
