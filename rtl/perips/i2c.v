@@ -100,7 +100,6 @@ module i2c(
             sda_r <= 1'b1;
             sda_link <= 1'b0;
             num <= 4'd0;
-            iic_read_data <= 32'h0;
             read_data_ready_o <= 1'b0;
         end
         else begin
