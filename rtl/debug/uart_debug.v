@@ -169,7 +169,7 @@ module uart_debug(
                 S_CRC_END: begin
                     if (crc_result == {rx_data[need_to_rec_bytes - 1], rx_data[need_to_rec_bytes - 2]}) begin
                         if (need_to_rec_bytes == `UART_FIRST_PACKET_LEN && remain_packet_count == 16'h0) begin
-                            remain_packet_count <= {7'h0, fw_file_size[31:7]} + 1'b1;
+                            remain_packet_count <= {7'h0, fw_file_size[31:5]} + 1'b1;
                             state <= S_SEND_ACK;
                         end else begin
                             remain_packet_count <= remain_packet_count - 1'b1;
