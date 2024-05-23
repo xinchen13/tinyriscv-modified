@@ -233,6 +233,7 @@ module i2c(
                     if (`SCL_LOW) begin
                         sda_r <= 1'b0; 
                         cstate <= STOP;
+                        iic_read_data <= {8'b0, iic_read_data[14:7]};  // lm75
                         read_data_ready_o <= 1'b1;                    
                     end
                     else begin
