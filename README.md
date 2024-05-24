@@ -8,7 +8,7 @@
 
 ## 资源的删减
 原有的 uart_debug 接收的 packet 大小为131，模块内部存在 132d x 8w 的寄存器组. 现需修改为 uart_debug 接收的 packet 大小为35，模块内部存在 35d x 8w 的寄存器组
-- 修改 [uart_debug.v](./rtl/debug/uart_debug.v) 中 `rx_data` 的大小; 宏 `UART_FIRST_PACKET_LEN` 和 `UART_REMAIN_PACKET_LEN` 对应的值; 包大小 `fw_file_size` 对应的 `rx_data` 位数索引
+- 修改 [uart_debug.v](./rtl/debug/uart_debug.v) 中 `rx_data` 的大小; 宏 `UART_FIRST_PACKET_LEN` 和 `UART_REMAIN_PACKET_LEN` 对应的值; 包大小 `fw_file_size` 及对应的 `rx_data` 位数索引也作出相应修改
 - 具体配置参数可以参考修改后的软件 [new_tinyriscv_fw_downloader.py](./tools/new_tinyriscv_fw_downloader.py)
 
 原有的 ROM 大小为 4096d x 32w，现需修改为 256d x 32w
@@ -60,7 +60,8 @@
 <img src="./figs/rt.png"  width="600" />
 
 - 指令功能可以等效为一次访存, 但由于 i2c 读取温度读数有延迟, 需要为 i2c 的访问增加握手信号: 在 [ex.v](./rtl/core/ex.v) 中运行该指令会向外设发送 req 信号, 等待过程中暂停流水线; ack 到达握手成功后重启流水线
-- 由于 tinyriscv 原来的实现中暂停流水线使用的 hold 信号会默认产生气泡, 造成指令丢失, 因此修改了流水线寄存器 [pc_reg.v](./rtl/core/pc_reg.v), [if_id.v](./rtl/core/if_id.v) 和 [id_ex.v](./rtl/core/id_ex.v), 当检测到 i2c 暂停流水线后均保持当前的值 
+- 由于 tinyriscv 原来的实现中暂停流水线使用的 hold 信号会默认产生气泡, 造成指令丢失, 因此修改了流水线寄存器 [pc_reg.v](./rtl/core/pc_reg.v), [if_id.v](./rtl/core/if_id.v) 和 [id_ex.v](./rtl/core/id_ex.v), 当检测到 i2c 暂停流水线后执行模块会给出 stall 信号使流水线寄存器均保持当前的值
+- 修改 [i2c.v](./rtl/perips/i2c.v), 读取完成后将数据右移7位, 满足读取要求
 - 为新指令添加 opcode 与 funct3 的宏, 方便译码
 - 运行指令测试: `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data`, 由于没有为 i2c 写测试模型, 因此 i2c 读到的是的是高阻态
 
@@ -68,7 +69,7 @@
 
 <img src="./figs/if.png"  width="600" />
 
-- 直接在驿码和执行模块添加指令对应操作即可
+- 直接在驿码和执行模块添加指令对应操作即可 (x_rs1 和 x_31 的比较采用有符号数比较)
 - 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
 
 ## 参考资料
