@@ -9,7 +9,7 @@
 ## 资源的删减
 原有的 uart_debug 接收的 packet 大小为131，模块内部存在 132d x 8w 的寄存器组. 现需修改为 uart_debug 接收的 packet 大小为35，模块内部存在 35d x 8w 的寄存器组
 - 修改 [uart_debug.v](./rtl/debug/uart_debug.v) 中 `rx_data` 的大小; 宏 `UART_FIRST_PACKET_LEN` 和 `UART_REMAIN_PACKET_LEN` 对应的值; 包大小 `fw_file_size` 及对应的 `rx_data` 位数索引也作出相应修改
-- 具体配置参数可以参考修改后的软件 [new_tinyriscv_fw_downloader.py](./tools/new_tinyriscv_fw_downloader.py)
+- 具体配置参数可以参考修改后的软件 [tinyriscv_fw_downloader.py](./tools/tinyriscv_fw_downloader.py)
 
 原有的 ROM 大小为 4096d x 32w，现需修改为 256d x 32w
 - 直接修改 [defines.v](./rtl/core/defines.v) 中的定义即可
