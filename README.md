@@ -74,10 +74,11 @@
 - 运行指 IF 令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
 
 ## 静态分支预测
-- 为 bxx 和 jal 指令添加了静态分支预测, 采用的方法是 BTFN 预测, 即对于向后的跳转预测为跳, 向前的跳转则预测为不跳. 向后的跳转是指跳转的目标地. 依据是在实际的汇编程序中向后分支跳转的情形要多于向前跳转的情形, 譬如常见的 for 循环生成的汇编
-指令往往使用向后跳转的分支指令; 对于 jal 指令, 提前译码消除了流水线气泡
+- 添加了静态分支预测, 采用的方法是 BTFN 预测, 即对于向后的跳转预测为跳, 向前的跳转则预测为不跳. 向后的跳转是指跳转的目标地. 依据是在实际的汇编程序中向后分支跳转的情形要多于向前跳转的情形, 譬如常见的 for 循环生成的汇编指令往往使用向后跳转的分支指令; 对于 jal 指令, 提前译码消除了流水线气泡
 - 提前译码模块见 [pre_id.v](./rtl/core/pre_id.v), 分支预测策略见 [bpu.v](./rtl/core/bpu.v)
+- 对于 simple 测试用例, 原用时 57770ns, 添加分支预测后用时 51610ns, 效率提高了 10.66%; 且分支预测逻辑较为简单, 在取指模块中也不会影响关键路经, 目测不会对整体时钟频率造成影响
 
 ## 参考资料
 - tinyriscv: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
+- 分支预测参考: [e203_hbirdv2](https://github.com/riscv-mcu/e203_hbirdv2)
 - I2C 协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
