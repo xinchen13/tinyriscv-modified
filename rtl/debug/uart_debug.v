@@ -16,12 +16,12 @@
 
 
 // clk = 50MHz时对应的波特率分频系数
-// `define UART_BAUD_115200        32'h1B8
+`define UART_BAUD_115200        32'h1B8
 
 // 串口寄存器地址
 `define UART_CTRL_REG           32'h30000000
 `define UART_STATUS_REG         32'h30000004
-// `define UART_BAUD_REG           32'h30000008
+`define UART_BAUD_REG           32'h30000008
 `define UART_TX_REG             32'h3000000c
 `define UART_RX_REG             32'h30000010
 
@@ -113,9 +113,9 @@ module uart_debug(
                     state <= S_INIT_UART_BAUD;
                 end
                 S_INIT_UART_BAUD: begin
-                    mem_addr_o <= 32'h0;
-                    mem_wdata_o <= 32'h0;
-                    mem_we_o <= 1'b0;
+                    mem_addr_o <= `UART_BAUD_REG;
+                    mem_wdata_o <= `UART_BAUD_115200;
+                    mem_we_o <= 1'b1;
                     state <= S_REC_FIRST_PACKET;
                 end
                 S_REC_FIRST_PACKET: begin
