@@ -25,6 +25,7 @@ module id(
     // from if_id
     input wire[`InstBus] inst_i,             // 指令内容
     input wire[`InstAddrBus] inst_addr_i,    // 指令地址
+    input wire prdt_taken_i,
 
     // from regs
     input wire[`RegBus] reg1_rdata_i,        // 通用寄存器1输入数据
@@ -44,7 +45,7 @@ module id(
     output reg[`MemAddrBus] csr_raddr_o,     // 读CSR寄存器地址
 
     // to ex
-    output reg prdt_taken_o,
+    output wire prdt_taken_o,
     output reg[`MemAddrBus] op1_o,
     output reg[`MemAddrBus] op2_o,
     output reg[`MemAddrBus] op1_jump_o,
@@ -70,6 +71,8 @@ module id(
 
     wire[11:0] imm = inst_i[31:20];
 
+    assign prdt_taken_o = prdt_taken_i;
+
     always @ (*) begin
         inst_o = inst_i;
         inst_addr_o = inst_addr_i;
@@ -83,7 +86,6 @@ module id(
         op2_o = `ZeroWord;
         op1_jump_o = `ZeroWord;
         op2_jump_o = `ZeroWord;
-        prdt_taken_o = 1'b0;
 
         case (opcode)
             `INST_TYPE_EXT: begin
@@ -243,11 +245,6 @@ module id(
                         op2_o = reg2_rdata_i;
                         op1_jump_o = inst_addr_i;
                         op2_jump_o = inst_i[31] ? 32'h4 : {{20{inst_i[31]}}, inst_i[7], inst_i[30:25], inst_i[11:8], 1'b0};
-                        if (inst_i[31]) begin
-                            prdt_taken_o = 1'b1;
-                        end else begin
-                            prdt_taken_o = 1'b0;
-                        end
                     end
                     default: begin
                         reg1_raddr_o = `ZeroReg;
@@ -266,7 +263,6 @@ module id(
                 op2_o = 32'h4;
                 op1_jump_o = `ZeroWord;
                 op2_jump_o = `ZeroWord;
-                prdt_taken_o = 1'b1;
             end
             `INST_JALR: begin
                 reg_we_o = `WriteEnable;
@@ -344,7 +340,6 @@ module id(
                 reg_waddr_o = `ZeroReg;
                 reg1_raddr_o = `ZeroReg;
                 reg2_raddr_o = `ZeroReg;
-                prdt_taken_o = 1'b0;
             end
         endcase
     end

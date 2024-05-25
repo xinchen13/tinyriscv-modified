@@ -24,6 +24,8 @@ module if_id(
 
     input wire[`InstBus] inst_i,            // 指令内容
     input wire[`InstAddrBus] inst_addr_i,   // 指令地址
+    input wire prdt_taken_i,
+    output reg prdt_taken_o,
 
     input wire[`Hold_Flag_Bus] hold_flag_i, // 流水线暂停标志
 
@@ -56,18 +58,22 @@ module if_id(
             inst_o <= `INST_NOP;
             inst_addr_o <= `ZeroWord;
             int_flag_o <= `INT_NONE;
+            prdt_taken_o <= 1'b0;
         end else if(stall_flag_i) begin
             inst_o <= inst_o;
             inst_addr_o <= inst_addr_o;
             int_flag_o <= int_flag_o;
+            prdt_taken_o <= prdt_taken_o;
         end else if(hold_en) begin
             inst_o <= `INST_NOP;
             inst_addr_o <= `ZeroWord;
             int_flag_o <= `INT_NONE;
+            prdt_taken_o <= 1'b0;
         end else begin
             inst_o <= inst_i;
             inst_addr_o <= inst_addr_i;
             int_flag_o <= int_flag_i;
+            prdt_taken_o <= prdt_taken_i;
         end
     end
 

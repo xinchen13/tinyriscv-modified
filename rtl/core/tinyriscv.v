@@ -52,6 +52,7 @@ module tinyriscv(
 	wire[`InstBus] if_inst_o;
     wire[`InstAddrBus] if_inst_addr_o;
     wire[`INT_BUS] if_int_flag_o;
+    wire if_prdt_taken_o;
 
     // id模块输出信号
     wire[`RegAddrBus] id_reg1_raddr_o;
@@ -254,6 +255,8 @@ module tinyriscv(
         .hold_flag_i(ctrl_hold_flag_o),
         .stall_flag_i(ex_stall_o),
         .inst_o(if_inst_o),
+        .prdt_taken_i(bpu_prdt_taken_o),
+        .prdt_taken_o(if_prdt_taken_o),
         .inst_addr_o(if_inst_addr_o)
     );
 
@@ -282,6 +285,7 @@ module tinyriscv(
         .csr_we_o(id_csr_we_o),
         .csr_rdata_o(id_csr_rdata_o),
         .csr_waddr_o(id_csr_waddr_o),
+        .prdt_taken_i(if_prdt_taken_o),
         .prdt_taken_o(id_prdt_taken_o)
     );
 
