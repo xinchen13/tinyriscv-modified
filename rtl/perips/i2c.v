@@ -31,17 +31,24 @@ module i2c(
     localparam IIC_READ_DATA = 4'h3;
     reg [31:0] iic_en;          // iic enable                   , 0x7004_0000
     localparam IIC_EN = 4'h4;
+    reg [31:0] iic_div;         // iic clk div                  , 0x7005_0000
+    localparam IIC_DIV = 4'h5;
+
+    wire [15:0] iic_div_1 = (iic_div >> 2) - 1'b1;
+    wire [15:0] iic_div_2 = (iic_div >> 1) - 1'b1;
+    wire [15:0] iic_div_3 = iic_div_1 + iic_div_2 - 1'b1;
+    wire [15:0] iic_div_4 = iic_div - 1'b1;
 
     // get scl
     reg [2:0] cnt;
-    reg [8:0] cnt_delay;
+    reg [15:0] cnt_delay;
     reg scl_r;
     always @ (posedge clk) begin
         if (!rst_n) begin
-            cnt_delay <= 9'd0;
+            cnt_delay <= 16'd0;
         end
-        else if (cnt_delay == 9'd499) begin
-            cnt_delay <= 9'd0;
+        else if (cnt_delay == (iic_div - 1'b1)) begin
+            cnt_delay <= 16'd0;
         end
         else begin
             cnt_delay <= cnt_delay + 1'b1;
@@ -54,10 +61,10 @@ module i2c(
         end
         else begin
             case (cnt_delay)
-                9'd124: cnt <= 3'd1;
-                9'd249: cnt <= 3'd2;    // scl's negedge
-                9'd374: cnt <= 3'd3;  
-                9'd499: cnt <= 3'd0;    // scl's posedge
+                iic_div_1: cnt <= 3'd1;
+                iic_div_2: cnt <= 3'd2;    // scl's negedge
+                iic_div_3: cnt <= 3'd3;  
+                iic_div_4: cnt <= 3'd0;    // scl's posedge
                 default: cnt <= 3'd5;
             endcase
         end
@@ -260,6 +267,7 @@ module i2c(
             iic_device_addr <= 32'h00000091;
             iic_write_data <= 32'h0;
             iic_en <= 32'h0;
+            iic_div <= 32'd500;
         end
         else begin
             if (we_i == 1'b1) begin

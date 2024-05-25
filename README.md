@@ -73,5 +73,5 @@
 - 运行指 IF 令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
 
 ## 参考资料
-- 原项目地址: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
-- I2C协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
+- tinyriscv: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
+- I2C 协议手册: [UM10204.pdf](https://www.nxp.com/docs/en/user-guide/UM10204.pdf)
