@@ -39,6 +39,7 @@ module ex(
     input wire[`MemAddrBus] op2_i,
     input wire[`MemAddrBus] op1_jump_i,
     input wire[`MemAddrBus] op2_jump_i,
+    input wire prdt_taken_i,
 
     // from mem
     input wire[`MemBus] mem_rdata_i,        // 内存输入数据
@@ -795,8 +796,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = op1_eq_op2 & `JumpEnable;
-                        jump_addr = {32{op1_eq_op2}} & op1_jump_add_op2_jump_res;
+                        jump_flag = op1_eq_op2 ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     `INST_BNE: begin
                         hold_flag = `HoldDisable;
@@ -805,8 +806,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_eq_op2) & `JumpEnable;
-                        jump_addr = {32{(~op1_eq_op2)}} & op1_jump_add_op2_jump_res;
+                        jump_flag = (~op1_eq_op2) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     `INST_BLT: begin
                         hold_flag = `HoldDisable;
@@ -815,8 +816,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_ge_op2_signed) & `JumpEnable;
-                        jump_addr = {32{(~op1_ge_op2_signed)}} & op1_jump_add_op2_jump_res;
+                        jump_flag = (~op1_ge_op2_signed) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     `INST_BGE: begin
                         hold_flag = `HoldDisable;
@@ -825,8 +826,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = (op1_ge_op2_signed) & `JumpEnable;
-                        jump_addr = {32{(op1_ge_op2_signed)}} & op1_jump_add_op2_jump_res;
+                        jump_flag = (op1_ge_op2_signed) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     `INST_BLTU: begin
                         hold_flag = `HoldDisable;
@@ -835,8 +836,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_ge_op2_unsigned) & `JumpEnable;
-                        jump_addr = {32{(~op1_ge_op2_unsigned)}} & op1_jump_add_op2_jump_res;
+                        jump_flag = (~op1_ge_op2_unsigned) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     `INST_BGEU: begin
                         hold_flag = `HoldDisable;
@@ -845,8 +846,8 @@ module ex(
                         mem_waddr_o = `ZeroWord;
                         mem_we = `WriteDisable;
                         reg_wdata = `ZeroWord;
-                        jump_flag = (op1_ge_op2_unsigned) & `JumpEnable;
-                        jump_addr = {32{(op1_ge_op2_unsigned)}} & op1_jump_add_op2_jump_res;
+                        jump_flag = (op1_ge_op2_unsigned) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
                     end
                     default: begin
                         jump_flag = `JumpDisable;
@@ -860,7 +861,17 @@ module ex(
                     end
                 endcase
             end
-            `INST_JAL, `INST_JALR: begin
+            `INST_JAL: begin
+                hold_flag = `HoldDisable;
+                mem_wdata_o = `ZeroWord;
+                mem_raddr_o = `ZeroWord;
+                mem_waddr_o = `ZeroWord;
+                mem_we = `WriteDisable;
+                jump_flag = `JumpDisable;
+                jump_addr = op1_jump_add_op2_jump_res;
+                reg_wdata = op1_add_op2_res;
+            end
+            `INST_JALR: begin
                 hold_flag = `HoldDisable;
                 mem_wdata_o = `ZeroWord;
                 mem_raddr_o = `ZeroWord;

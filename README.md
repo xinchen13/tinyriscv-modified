@@ -41,6 +41,7 @@
 
 <img src="./figs/lm75_timing.png"  width="800" />
 
+- 添加了一个分频系数配置寄存器, 用于配置需要的 scl 时钟
 - 在 [rib.v](./rtl/core/rib.v) 中给 rib 总线添加一个 slave interface, 按序号分配为 slave_7, 起始地址映射到 0x7000_0000
 - 顶层模块中添加总线子模块接口, 例化 i2c 模块, 引出 io
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
@@ -71,6 +72,11 @@
 
 - 直接在驿码和执行模块添加指令对应操作即可 (x_rs1 和 x_31 的比较采用有符号数比较)
 - 运行指 IF 令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
+
+## 静态分支预测
+- 为 bxx 和 jal 指令添加了静态分支预测, 采用的方法是 BTFN 预测, 即对于向后的跳转预测为跳, 向前的跳转则预测为不跳. 向后的跳转是指跳转的目标地. 依据是在实际的汇编程序中向后分支跳转的情形要多于向前跳转的情形, 譬如常见的 for 循环生成的汇编
+指令往往使用向后跳转的分支指令; 对于 jal 指令, 提前译码消除了流水线气泡
+- 提前译码模块见 [pre_id.v](./rtl/core/pre_id.v), 分支预测策略见 [bpu.v](./rtl/core/bpu.v)
 
 ## 参考资料
 - tinyriscv: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)

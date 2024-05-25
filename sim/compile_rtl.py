@@ -40,6 +40,8 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/core/regs.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/rib.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/tinyriscv.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core/pre_id.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core/bpu.v')
     # ../rtl/perips
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/ram.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/rom.v')

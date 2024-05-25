@@ -27,6 +27,8 @@ module pc_reg(
     input wire[`Hold_Flag_Bus] hold_flag_i, // 流水线暂停标志
     input wire jtag_reset_flag_i,           // 复位标志
     input wire stall_flag_i,
+    input wire prdt_taken_i,
+    input wire [`InstAddrBus] prdt_addr_i,
 
     output reg[`InstAddrBus] pc_o           // PC指针
 
@@ -43,6 +45,8 @@ module pc_reg(
         // 暂停
         end else if (stall_flag_i || (hold_flag_i >= `Hold_Pc)) begin
             pc_o <= pc_o;
+        end else if (prdt_taken_i) begin
+            pc_o <= prdt_addr_i;
         // 地址加4
         end else begin
             pc_o <= pc_o + 4'h4;

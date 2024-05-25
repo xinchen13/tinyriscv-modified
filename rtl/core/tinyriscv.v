@@ -70,6 +70,7 @@ module tinyriscv(
     wire[`MemAddrBus] id_op2_o;
     wire[`MemAddrBus] id_op1_jump_o;
     wire[`MemAddrBus] id_op2_jump_o;
+    wire id_prdt_taken_o;
 
     // id_ex模块输出信号
     wire[`InstBus] ie_inst_o;
@@ -85,6 +86,7 @@ module tinyriscv(
     wire[`MemAddrBus] ie_op2_o;
     wire[`MemAddrBus] ie_op1_jump_o;
     wire[`MemAddrBus] ie_op2_jump_o;
+    wire ie_prdt_taken_o;
 
     // ex模块输出信号
     wire[`MemBus] ex_mem_wdata_o;
@@ -141,6 +143,13 @@ module tinyriscv(
     wire clint_int_assert_o;
     wire clint_hold_flag_o;
 
+    // branch prediction
+    wire inst_jal;
+    wire inst_bxx;
+    wire inst_jalr;
+    wire [`InstAddrBus] jump_and_branch_imm;
+    wire bpu_prdt_taken_o;
+    wire [`InstAddrBus] bpu_prdt_addr_o;
 
     assign rib_ex_addr_o = (ex_mem_we_o == `WriteEnable)? ex_mem_waddr_o: ex_mem_raddr_o;
     assign rib_ex_data_o = ex_mem_wdata_o;
@@ -160,7 +169,9 @@ module tinyriscv(
         .hold_flag_i(ctrl_hold_flag_o),
         .stall_flag_i(ex_stall_o),
         .jump_flag_i(ctrl_jump_flag_o),
-        .jump_addr_i(ctrl_jump_addr_o)
+        .jump_addr_i(ctrl_jump_addr_o),
+        .prdt_taken_i(bpu_prdt_taken_o),
+        .prdt_addr_i(bpu_prdt_addr_o)
     );
 
     // ctrl模块例化
@@ -214,6 +225,24 @@ module tinyriscv(
         .clint_csr_mstatus(csr_clint_csr_mstatus)
     );
 
+    pre_id u_pre_id(
+        .inst_i(rib_pc_data_i),
+        .inst_jal_o(inst_jal),
+        .inst_jalr_o(inst_jalr),
+        .inst_bxx_o(inst_bxx),
+        .jump_and_branch_imm_o(jump_and_branch_imm)
+    );
+
+    bpu u_bpu(
+        .pc_i(pc_pc_o),
+        .inst_jal_i(inst_jal),
+        .inst_jalr_i(inst_jalr),
+        .inst_bxx_i(inst_bxx),
+        .jump_and_branch_imm_i(jump_and_branch_imm),
+        .prdt_taken_o(bpu_prdt_taken_o),
+        .prdt_addr_o(bpu_prdt_addr_o)
+    );
+
     // if_id模块例化
     if_id u_if_id(
         .clk(clk),
@@ -252,7 +281,8 @@ module tinyriscv(
         .csr_raddr_o(id_csr_raddr_o),
         .csr_we_o(id_csr_we_o),
         .csr_rdata_o(id_csr_rdata_o),
-        .csr_waddr_o(id_csr_waddr_o)
+        .csr_waddr_o(id_csr_waddr_o),
+        .prdt_taken_o(id_prdt_taken_o)
     );
 
     // id_ex模块例化
@@ -286,7 +316,9 @@ module tinyriscv(
         .csr_rdata_i(id_csr_rdata_o),
         .csr_we_o(ie_csr_we_o),
         .csr_waddr_o(ie_csr_waddr_o),
-        .csr_rdata_o(ie_csr_rdata_o)
+        .csr_rdata_o(ie_csr_rdata_o),
+        .prdt_taken_i(id_prdt_taken_o),
+        .prdt_taken_o(ie_prdt_taken_o)
     );
 
     // ex模块例化
@@ -333,7 +365,8 @@ module tinyriscv(
         .csr_rdata_i(ie_csr_rdata_o),
         .csr_wdata_o(ex_csr_wdata_o),
         .csr_we_o(ex_csr_we_o),
-        .csr_waddr_o(ex_csr_waddr_o)
+        .csr_waddr_o(ex_csr_waddr_o),
+        .prdt_taken_i(ie_prdt_taken_o)
     );
 
     // div模块例化

@@ -1,0 +1,7 @@
+# Object files
+*.o
+*.ko
+*.obj
+bpu.bin
+bpu.dump
+bpu

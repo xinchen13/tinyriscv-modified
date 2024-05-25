@@ -35,11 +35,13 @@ module id_ex(
     input wire[`MemAddrBus] op2_i,
     input wire[`MemAddrBus] op1_jump_i,
     input wire[`MemAddrBus] op2_jump_i,
+    input wire prdt_taken_i,
 
     input wire[`Hold_Flag_Bus] hold_flag_i, // 流水线暂停标志
 
     input wire stall_flag_i,
 
+    output reg prdt_taken_o,
     output reg [`MemAddrBus] op1_o,
     output reg [`MemAddrBus] op2_o,
     output reg [`MemAddrBus] op1_jump_o,
@@ -125,6 +127,7 @@ module id_ex(
             reg2_rdata_o<= `ZeroWord;
             inst_addr_o <= `ZeroWord;
             inst_o      <= `INST_NOP;
+            prdt_taken_o <= 1'b0;
         end else if(stall_flag_i) begin
             op1_o      <= op1_o;
             op2_o      <= op2_o;
@@ -139,6 +142,7 @@ module id_ex(
             reg2_rdata_o<= reg2_rdata_o;
             inst_addr_o <= inst_addr_o;
             inst_o      <= inst_o;
+            prdt_taken_o <= prdt_taken_o;
         end else if(hold_en) begin
             op1_jump_o <= `ZeroWord;
             op2_jump_o <= `ZeroWord;
@@ -153,6 +157,7 @@ module id_ex(
             reg2_rdata_o<= `ZeroWord;
             inst_addr_o <= `ZeroWord;
             inst_o      <= `INST_NOP;
+            prdt_taken_o <= 1'b0;
         end else begin
             op1_o      <= op1_i;
             op2_o      <= op2_i;
@@ -167,6 +172,7 @@ module id_ex(
             reg2_rdata_o<= reg2_rdata_i;
             inst_addr_o <= inst_addr_i;
             inst_o      <= inst_i;
+            prdt_taken_o <= prdt_taken_i;
         end
     end
 
