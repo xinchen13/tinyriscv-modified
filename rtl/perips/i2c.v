@@ -281,6 +281,9 @@ module i2c(
                     IIC_EN: begin
                         iic_en <= data_i;
                     end
+                    IIC_DIV: begin
+                        iic_div <= data_i;
+                    end
                     default: begin
                     end
                 endcase
@@ -306,6 +309,9 @@ module i2c(
                 end
                 IIC_EN: begin
                     data_o = iic_en;
+                end
+                IIC_DIV: begin
+                    data_o = iic_div;
                 end
                 default: begin
                     data_o = 32'h0;
