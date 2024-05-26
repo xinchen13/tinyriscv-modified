@@ -149,8 +149,8 @@ module ex(
     assign mul_temp = mul_op1 * mul_op2;
     assign mul_temp_invert = ~mul_temp + 1;
 
-    assign mem_raddr_index = op1_add_op2_res & 2'b11;
-    assign mem_waddr_index = op1_add_op2_res & 2'b11;
+    assign mem_raddr_index = (reg1_rdata_i + {{20{inst_i[31]}}, inst_i[31:20]}) & 2'b11;
+    assign mem_waddr_index = (reg1_rdata_i + {{20{inst_i[31]}}, inst_i[31:25], inst_i[11:7]}) & 2'b11;
 
     assign div_start_o = (int_assert_i == `INT_ASSERT)? `DivStop: div_start;
 
