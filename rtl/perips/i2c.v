@@ -39,6 +39,22 @@ module i2c(
     wire [15:0] iic_div_3 = iic_div_1 + iic_div_2 - 1'b1;
     wire [15:0] iic_div_4 = iic_div - 1'b1;
 
+    // for i2c ctrl
+    reg [7:0] db_r;     
+    parameter   IDLE      = 4'd0;
+    parameter   START     = 4'd1;
+    parameter   ADDR      = 4'd2;
+    parameter   ACK1      = 4'd3;
+    parameter   DATA1     = 4'd4;
+    parameter   ACK2      = 4'd5;
+    parameter   DATA2     = 4'd6;
+    parameter   NACK      = 4'd7;
+    parameter   STOP      = 4'd8;
+    reg [3:0] cstate;    
+    reg sda_r;
+    reg sda_link;         
+    reg [3:0] num;
+
     // get scl
     reg [2:0] cnt;
     reg [15:0] cnt_delay;
@@ -84,21 +100,6 @@ module i2c(
 
     assign scl = (cstate == IDLE || cstate == STOP) ? 1'b1 : scl_r;
 
-    reg [7:0] db_r;     
-    parameter   IDLE      = 4'd0;
-    parameter   START     = 4'd1;
-    parameter   ADDR      = 4'd2;
-    parameter   ACK1      = 4'd3;
-    parameter   DATA1     = 4'd4;
-    parameter   ACK2      = 4'd5;
-    parameter   DATA2     = 4'd6;
-    parameter   NACK      = 4'd7;
-    parameter   STOP      = 4'd8;
-
-    reg [3:0] cstate;    
-    reg sda_r;
-    reg sda_link;         
-    reg [3:0] num;
     assign sda = sda_link ? sda_r:1'bz;
 
     always @ (posedge clk) begin

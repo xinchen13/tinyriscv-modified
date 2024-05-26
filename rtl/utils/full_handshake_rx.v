@@ -45,6 +45,9 @@ module full_handshake_rx #(
     reg[1:0] state;
     reg[1:0] state_next;
 
+    reg req_d;
+    reg req;
+
     always @ (posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= STATE_IDLE;
@@ -76,9 +79,6 @@ module full_handshake_rx #(
             end
         endcase
     end
-
-    reg req_d;
-    reg req;
 
     // 将请求信号打两拍进行同步
     always @ (posedge clk or negedge rst_n) begin
