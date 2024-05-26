@@ -27,4 +27,4 @@ verdi:
 	
 #clean
 clean:
-	rm -rf  ./Verdi-SXLog  ./dff ./csrc *.daidir *log *.vpd *.vdb simv* *.key *race.out* *.rc *.fsdb *.vpd *.log *.conf *.dat *.conf *.so uart
+	rm -rf  ./Verdi-SXLog ./Verdi-UltraLog ./dff ./csrc *.daidir *log *.vpd *.vdb simv* *.key *race.out* *.rc *.fsdb *.vpd *.log *.conf *.dat *.conf *.so uart
