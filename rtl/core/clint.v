@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-// `include "defines.v"
+`include "../header/defines.vh"
 
 
 // core local interruptor module

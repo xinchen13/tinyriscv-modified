@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-// `include "defines.v"
+`include "../header/defines.vh"
 
 // 控制模块
 // 发出跳转、暂停流水线信号

@@ -1,4 +1,4 @@
-// `include "defines.v"
+`include "../header/defines.vh"
 
 module bpu(
     input wire [`InstAddrBus] pc_i,

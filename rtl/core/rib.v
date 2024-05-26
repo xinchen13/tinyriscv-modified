@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-// `include "defines.v"
+`include "../header/defines.vh"
 
 
 // RIB总线模块

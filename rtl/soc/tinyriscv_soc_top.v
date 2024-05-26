@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-// `include "../core/defines.v"
+`include "../header/defines.vh"
 
 // tinyriscv soc顶层模块
 module tinyriscv_soc_top(

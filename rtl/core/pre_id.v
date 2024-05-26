@@ -1,4 +1,4 @@
-// `include "defines.v"
+`include "../header/defines.vh"
 
 module pre_id(
     input wire [`InstBus] inst_i,
