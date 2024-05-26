@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-`include "defines.v"
+// `include "defines.v"
 
 // 将指令向译码模块传递
 module if_id(

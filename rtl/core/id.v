@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-`include "defines.v"
+// `include "defines.v"
 
 // 译码模块
 // 纯组合逻辑电路

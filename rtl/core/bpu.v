@@ -1,4 +1,4 @@
-`include "defines.v"
+// `include "defines.v"
 
 module bpu(
     input wire [`InstAddrBus] pc_i,

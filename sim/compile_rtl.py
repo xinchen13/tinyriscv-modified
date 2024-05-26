@@ -21,7 +21,7 @@ def main():
     # 编译生成文件
     iverilog_cmd += ['-o', r'out.vvp']
     # 头文件(defines.v)路径
-    iverilog_cmd += ['-I', rtl_dir + r'/rtl/core']
+    iverilog_cmd += ['-I', rtl_dir + r'/rtl/header']
     # 宏定义，仿真输出文件
     iverilog_cmd += ['-D', r'OUTPUT="signature.output"']
     # testbench文件
@@ -30,7 +30,6 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/core/clint.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/csr_reg.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/ctrl.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/defines.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/div.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/ex.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/core/id.v')
@@ -64,6 +63,8 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_buf.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_dff.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_pulse.v')
+
+    iverilog_cmd.append(rtl_dir + r'/rtl/header/defines.v')
 
     # 编译
     process = subprocess.Popen(iverilog_cmd)

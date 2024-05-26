@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-`include "../core/defines.v"
+// `include "../core/defines.v"
 
 // JTAG顶层模块
 module jtag_top #(
