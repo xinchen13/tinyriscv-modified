@@ -11,10 +11,10 @@
 - 具体配置参数可以参考修改后的软件 [tinyriscv_fw_downloader.py](./tools/tinyriscv_fw_downloader.py)
 
 原有的 ROM 大小为 4096d x 32w，现需修改为 256d x 32w
-- 直接修改 [defines.v](./rtl/header/defines.v) 中的定义即可
+- 直接修改 [defines.vh](./rtl/header/defines.vh) 中的定义即可
 
 原有的 RAM 大小为 4096d x 32w，现需修改为 16d x 32w
-- 直接修改 [defines.v](./rtl/header/defines.v) 中的定义即可
+- 直接修改 [defines.vh](./rtl/header/defines.vh) 中的定义即可
 - 在编译软件时需要修改链接脚本. 如在 [link.lds](./tests/example/link.lds) 中需要修改 MEMORY 关键词中的 ram 大小并调整 stack 大小 `__stack_size`
 
 ## PWM 外设的添加
@@ -47,7 +47,7 @@
 <img src="./figs/send_id.png"  width="600" />
 
 - 修改 [uart.v](./rtl/perips/uart.v) 的写寄存器逻辑 (相当于添加了一个状态机器), 当寄存器 uart_ctrl[2] 和 uart_ctrl[0] 都被写入 1 时, 触发一次输出学号, 通过 uart 输出一次学号. 在此基础上该指令的运行过程简化为一次访存: 在地址 0x30000000 处写入一次 0x00000005
-- 在 [defines.v](./rtl/header/defines.v) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
+- 在 [defines.vh](./rtl/header/defines.vh) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
 
 ## 拓展指令: Read Temperature
 
