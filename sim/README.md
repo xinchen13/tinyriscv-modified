@@ -24,7 +24,8 @@
 
 使用方法： `python test_all_isa.py`
 
-# sim_data_file.py
+# generate_inst_data_and_sim.py
 
-对指定的 .data 文件(重新复制到inst.data文件)进行测试
+1. 对指定的 .data 文件(重新复制到 inst.data 文件)进行测试
+2. 对指定的 .bin 文件(重新生成 inst.data 文件)进行测试
 
