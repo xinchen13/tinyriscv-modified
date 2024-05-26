@@ -22,6 +22,7 @@ int main()
 	// *(unsigned int *)0x30000008 = 550;	// uart 分频系数： 62.5MHz
 	*(unsigned int *)0x30000000 = 1; // 将uart设置到发送数据的模式
 	sID();
+	while(1);
     return 0;
 }
 
