@@ -4,7 +4,6 @@
 原有的 Tinyriscv 中引出了2个 GPIO, 现在需要将其修改为16个:
 - 修改 [gpio.v](./rtl/perips/gpio.v) 中的信号宽度, 为后14个引脚添加写入逻辑
 - 在顶层模块 [tinyriscv_soc_top.v](./rtl/soc/tinyriscv_soc_top.v) 中修改 io_in 信号的宽度, 并将gpio模块的所有输入输出引出到 SoC 的 gpio 管脚处
-- 验证程序见 [main.c](./tests/example/gpio_16/main.c), 在 `sim/` 路径下运行 `python ./sim_new_nowave.py ../tests/example/gpio_16/gpio.bin inst.data` , 之后查看波形
 
 ## 资源的删减
 原有的 uart_debug 接收的 packet 大小为131，模块内部存在 132d x 8w 的寄存器组. 现需修改为 uart_debug 接收的 packet 大小为35，模块内部存在 35d x 8w 的寄存器组
@@ -18,9 +17,6 @@
 - 直接修改 [defines.v](./rtl/core/defines.v) 中的定义即可
 - 在编译软件时需要修改链接脚本. 如在 [link.lds](./tests/example/link.lds) 中需要修改 MEMORY 关键词中的 ram 大小并调整 stack 大小 `__stack_size`
 
-其他说明
-- 添加了脚本文件 [sim_data_file.py](./sim/sim_data_file.py), 在 `sim/` 目录下可以使用如下命令指定转换好的 `xxx.data` 文件作为测试向量: `python sim_data_file.py path_of_the_target_mem_file.data inst.data`
-
 ## PWM 外设的添加
 
 <img src="./figs/pwm.png"  width="520" />
@@ -30,7 +26,6 @@
 - 顶层模块中添加总线子模块接口, 例化 pwm 模块, 引出 io
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
 - 编写软件库 [pwm.h](./tests/example/include/pwm.h), 定义寄存器地址和读写宏
-- 测试用例见 [pwm/](./tests/example/pwm/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/pwm/pwm.bin inst.data` 运行
 
 ## I2C 外设的添加
 
@@ -46,7 +41,6 @@
 - 顶层模块中添加总线子模块接口, 例化 i2c 模块, 引出 io
 - 为 [compile_rtl.py](./sim/compile_rtl.py) 添加对应 `.v` 文件
 - 编写软件库 [i2c.h](./tests/example/include/i2c.h), 定义寄存器地址和读写宏
-- 测试用例见 [i2c/](./tests/example/i2c/), 编译后在 `sim/` 文件夹下通过 `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data` 运行
 
 ## 拓展指令: Send ID
 
@@ -54,7 +48,6 @@
 
 - 修改 [uart.v](./rtl/perips/uart.v) 的写寄存器逻辑 (相当于添加了一个状态机器), 当寄存器 uart_ctrl[2] 和 uart_ctrl[0] 都被写入 1 时, 触发一次输出学号, 通过 uart 输出一次学号. 在此基础上该指令的运行过程简化为一次访存: 在地址 0x30000000 处写入一次 0x00000005
 - 在 [defines.v](./rtl/core/defines.v) 中添加拓展指令类型 `INST_TYPE_EXT`; 为 [id.v](./rtl/core/id.v) 与 [ex.v](./rtl/core/ex.v) 模块添加对 sID 指令的支持
-- 运行指令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/sID/sID_inst.data inst.data`
 
 ## 拓展指令: Read Temperature
 
@@ -64,14 +57,12 @@
 - 由于 tinyriscv 原来的实现中暂停流水线使用的 hold 信号会默认产生气泡, 造成指令丢失, 因此修改了流水线寄存器 [pc_reg.v](./rtl/core/pc_reg.v), [if_id.v](./rtl/core/if_id.v) 和 [id_ex.v](./rtl/core/id_ex.v), 当检测到 i2c 暂停流水线后执行模块会给出 stall 信号使流水线寄存器均保持当前的值
 - 修改 [i2c.v](./rtl/perips/i2c.v), 读取完成后将数据右移7位, 满足读取要求
 - 为新指令添加 opcode 与 funct3 的宏, 方便译码
-- 运行指令测试: `python sim_new_nowave.py ../tests/example/i2c/i2c.bin inst.data`, 由于没有为 i2c 写测试模型, 因此 i2c 读到的是的是高阻态
 
 ## 拓展指令: Integrated & Fire
 
 <img src="./figs/if.png"  width="600" />
 
 - 直接在驿码和执行模块添加指令对应操作即可 (x_rs1 和 x_31 的比较采用有符号数比较)
-- 运行指 IF 令测试: `python sim_data_file.py ../tests/test_mem/Extend_Inst_Example/IF/IF_inst.data inst.data`
 
 ## 静态分支预测
 - 添加了静态分支预测, 采用的方法是 BTFN 预测, 即对于向后的跳转预测为跳, 向前的跳转则预测为不跳. 向后的跳转是指跳转的目标地. 依据是在实际的汇编程序中向后分支跳转的情形要多于向前跳转的情形, 譬如常见的 for 循环生成的汇编指令往往使用向后跳转的分支指令; 对于 jal 指令, 提前译码消除了流水线气泡
