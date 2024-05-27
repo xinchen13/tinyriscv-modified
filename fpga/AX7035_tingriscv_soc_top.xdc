@@ -65,3 +65,7 @@ set_property PULLUP true [get_ports io_scl]
 set_property IOSTANDARD LVCMOS33 [get_ports uart_debug_pin]
 set_property PACKAGE_PIN M13 [get_ports uart_debug_pin]
 
+# Uart 波特率更新使能引脚
+set_property IOSTANDARD LVCMOS33 [get_ports baud_update_en]
+set_property PACKAGE_PIN M13 [get_ports baud_update_en]
+

@@ -21,6 +21,7 @@ module tinyriscv_soc_top(
 
     input wire clk,
     input wire rst,
+    input wire baud_update_en,
     output reg succ,         // 测试是否成功信号
     input wire uart_debug_pin, // 串口下载使能引脚
     output wire uart_tx_pin, // UART发送引脚
@@ -234,6 +235,7 @@ module tinyriscv_soc_top(
     uart uart_0(
         .clk(clk),
         .rst(rst),
+        .baud_update_en(~baud_update_en),
         .we_i(s3_we_o),
         .addr_i(s3_addr_o),
         .data_i(s3_data_o),

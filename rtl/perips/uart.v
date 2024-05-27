@@ -18,17 +18,20 @@
 // 串口模块(默认: 115200, 8 N 1)
 module uart(
 
+    // system interface
 	input wire clk,
 	input wire rst,
+    input wire baud_update_en,
 
+    // rib interface
     input wire we_i,
     input wire[31:0] addr_i,
     input wire[31:0] data_i,
-
     output reg[31:0] data_o,
+
+    // device interface
 	output wire tx_pin,
     input wire rx_pin
-
     );
 
     // 50MHz时钟，波特率115200bps对应的分频系数
@@ -236,6 +239,9 @@ module uart(
                         uart_rx <= {24'h0, rx_data};
                     end
                 end
+                if (baud_update) begin
+                    uart_baud <= captured_baud_rate;
+                end
             end
         end
     end
@@ -431,6 +437,62 @@ module uart(
                 rx_data <= 8'h0;
                 rx_over <= 1'b0;
             end
+        end
+    end
+
+    // ************** baud_rate 自适应更新, 用于
+    reg baud_update;
+    reg [2:0] baud_update_state;
+    reg [31:0] captured_baud_rate;
+
+    localparam BAUD_IDLE     = 3'd1;
+    localparam BAUD_START    = 3'd2;
+    localparam BAUD_STOP     = 3'd3;
+
+    // 上升沿检测(检测起始信号结束)
+    wire rx_posedge;
+    assign rx_posedge = ~rx_q1 && rx_q0;
+
+    always @ (posedge clk) begin
+        if (!rst) begin
+            baud_update <= 1'b0;
+            baud_update_state <= BAUD_IDLE;
+            captured_baud_rate <= 32'h0;
+        end
+        else begin
+            case (baud_update_state)
+            BAUD_IDLE: begin
+                baud_update <= 1'b0;
+                if (baud_update_en) begin
+                    baud_update_state <= BAUD_START;
+                end
+            end
+            BAUD_START: begin
+                if (baud_update_en) begin
+                    if (rx_negedge) begin
+                        captured_baud_rate <= 32'h0;
+                    end
+                    else if (rx_posedge) begin
+                        baud_update_state <= BAUD_STOP;
+                    end
+                    else captured_baud_rate <= captured_baud_rate + 1'b1;
+                end
+                else begin
+                    baud_update_state <= BAUD_IDLE;
+                end
+            end
+            BAUD_STOP: begin
+                if (baud_update_en) begin
+                    baud_update <= 1'b1;
+                end
+                baud_update_state <= BAUD_IDLE;
+            end
+            default begin
+                baud_update <= 1'b0;
+                baud_update_state <= BAUD_IDLE;
+                captured_baud_rate <= 32'h0;
+            end
+            endcase
         end
     end
 
