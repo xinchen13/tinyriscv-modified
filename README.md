@@ -71,11 +71,11 @@
 
 原用时 57770ns :
 
-<img src="./figs/bpu_1.png"  width="666" />
+<img src="./figs/bpu_1.png"/>
 
 添加分支预测后用时 51610ns:
 
-<img src="./figs/bpu_2.png"  width="666" />
+<img src="./figs/bpu_2.png"/>
 
 ## 参考资料
 - tinyriscv: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
