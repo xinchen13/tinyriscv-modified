@@ -91,6 +91,19 @@ module uart(
 
     assign tx_pin = tx_reg;
 
+    // *************************************** uart baud capture
+    reg baud_update;
+    reg [1:0] baud_update_state;
+    reg [31:0] captured_baud_rate;
+
+    localparam BAUD_IDLE     = 2'd1;
+    localparam BAUD_START    = 2'd2;
+    localparam BAUD_STOP     = 2'd3;
+
+    // 上升沿检测(检测起始信号结束)
+    wire rx_posedge;
+    // ***************************************
+
 
     // send ID: 0x32, 0x30, 0x32, 0x33, 0x32, 0x31, 0x31, 0x30, 0x36, 0x33
     reg [7:0] id [0:9];
@@ -441,16 +454,6 @@ module uart(
     end
 
     // ************** baud_rate 自适应更新 *********************
-    reg baud_update;
-    reg [1:0] baud_update_state;
-    reg [31:0] captured_baud_rate;
-
-    localparam BAUD_IDLE     = 2'd1;
-    localparam BAUD_START    = 2'd2;
-    localparam BAUD_STOP     = 2'd3;
-
-    // 上升沿检测(检测起始信号结束)
-    wire rx_posedge;
     assign rx_posedge = ~rx_q1 && rx_q0;
 
     always @ (posedge clk) begin
