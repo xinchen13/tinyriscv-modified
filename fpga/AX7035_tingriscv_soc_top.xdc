@@ -67,5 +67,5 @@ set_property PACKAGE_PIN M13 [get_ports uart_debug_pin]
 
 # Uart 波特率更新使能引脚
 set_property IOSTANDARD LVCMOS33 [get_ports baud_update_en]
-set_property PACKAGE_PIN M13 [get_ports baud_update_en]
+set_property PACKAGE_PIN K14 [get_ports baud_update_en]
 
