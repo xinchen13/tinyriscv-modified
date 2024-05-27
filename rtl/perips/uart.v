@@ -440,14 +440,14 @@ module uart(
         end
     end
 
-    // ************** baud_rate 自适应更新, 用于
+    // ************** baud_rate 自适应更新 *********************
     reg baud_update;
-    reg [2:0] baud_update_state;
+    reg [1:0] baud_update_state;
     reg [31:0] captured_baud_rate;
 
-    localparam BAUD_IDLE     = 3'd1;
-    localparam BAUD_START    = 3'd2;
-    localparam BAUD_STOP     = 3'd3;
+    localparam BAUD_IDLE     = 2'd1;
+    localparam BAUD_START    = 2'd2;
+    localparam BAUD_STOP     = 2'd3;
 
     // 上升沿检测(检测起始信号结束)
     wire rx_posedge;
