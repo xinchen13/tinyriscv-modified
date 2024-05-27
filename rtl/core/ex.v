@@ -753,9 +753,10 @@ module ex(
                         jump_addr = `ZeroWord;
                         if (inst_i[31:20] == 12'b0) begin
                             if (op1_ge_op2_signed) begin
-                                mem_wdata_o = op1_i[7:0];
+                                mem_wdata_o = {24'b0, op1_i[7:0]};
                                 mem_raddr_o = `ZeroWord;
                                 mem_waddr_o = 32'h3000000c;
+                                mem_req = `RIB_REQ;
                                 mem_we = `WriteEnable;
                                 reg_wdata = `ZeroWord;
                             end
