@@ -77,6 +77,11 @@
 
 <img src="./figs/bpu_2.png"/>
 
+## Uart 自适应波特率
+- 为了能够在任意时钟频率下通过 uart_debug 模块实现程序更新, 为 uart 模块设计了自适应波特率模块: 在初始化时上位机向 uart 模块发送一次 `0x55` 即可完成波特率 115200 下的 uart 分频系数设定, 之后即可通过上位机更新 rom
+- 禁用了 uart_debug 模块的波特率更新, 防止冲突
+- 在不同的时钟频率下软件需要使用 i2c 和 uart 的话只能通过软件(写分频寄存器)来进行配置
+
 ## 参考资料
 - tinyriscv: [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv)
 - 分支预测参考: [e203_hbirdv2](https://github.com/riscv-mcu/e203_hbirdv2)
