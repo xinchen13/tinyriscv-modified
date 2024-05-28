@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "../include/utils.h"
 #include "../include/i2c.h"
+#include "../include/uart.h"
 
 static int rT(){ // sID拓展指令
 	int Temperature;
@@ -23,7 +24,17 @@ int main()
 	Temperature = rT();
 	*(unsigned int *)0x3000000c = Temperature;
 
-    while(1);
+	int cnt = 0;
+	while(1){
+		if (cnt == 999999) {
+			cnt = 0;
+			Temperature = rT();
+			while (UART0_REG(UART0_STATUS) & 0x1);
+			*(unsigned int *)0x3000000c = Temperature;
+		} else {
+			cnt ++;
+		}
+	}
 	
     return 0;
 }
