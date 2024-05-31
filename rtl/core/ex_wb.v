@@ -1,6 +1,6 @@
 `include "../header/defines.vh"
 
-module ex_memwb (
+module ex_wb (
     input wire clk,
     input wire rst,
 

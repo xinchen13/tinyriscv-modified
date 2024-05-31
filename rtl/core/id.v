@@ -28,14 +28,19 @@ module id(
     input wire prdt_taken_i,
 
     // from regs
-    input wire[`RegBus] reg1_rdata_i,        // 通用寄存器1输入数据
-    input wire[`RegBus] reg2_rdata_i,        // 通用寄存器2输入数据
+    input wire[`RegBus] rf_reg1_rdata_i,        // 通用寄存器1输入数据
+    input wire[`RegBus] rf_reg2_rdata_i,        // 通用寄存器2输入数据
 
     // from csr reg
     input wire[`RegBus] csr_rdata_i,         // CSR寄存器输入数据
 
     // from ex
     input wire ex_jump_flag_i,               // 跳转标志
+    input wire[`RegBus] ex_reg_wdata_i,
+
+    // from hazard ctrl
+    input wire fwd_reg1_i,
+    input wire fwd_reg2_i,
 
     // to regs
     output reg[`RegAddrBus] reg1_raddr_o,    // 读通用寄存器1地址
@@ -61,6 +66,11 @@ module id(
     output reg[`MemAddrBus] csr_waddr_o      // 写CSR寄存器地址
 
     );
+    wire[`RegBus] reg1_rdata_i;        // 通用寄存器1输入数据
+    wire[`RegBus] reg2_rdata_i;        // 通用寄存器2输入数据
+
+    assign reg1_rdata_i = fwd_reg1_i ? ex_reg_wdata_i : rf_reg1_rdata_i;
+    assign reg2_rdata_i = fwd_reg2_i ? ex_reg_wdata_i : rf_reg2_rdata_i;
 
     wire[6:0] opcode = inst_i[6:0];
     wire[2:0] funct3 = inst_i[14:12];
