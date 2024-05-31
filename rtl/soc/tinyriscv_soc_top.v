@@ -16,6 +16,11 @@
 
 `include "../header/defines.vh"
 
+// master0: core            2
+// master1: pc              4
+// master2: jtag            3
+// master3: uart_debug      1
+
 // tinyriscv soc顶层模块
 module tinyriscv_soc_top(
 

@@ -58,7 +58,7 @@ module ex(
     output wire mem_req_o,                  // 请求访问内存标志
     input  wire mem_ack_i,
 
-    // to regs
+    // to wb
     output wire[`RegBus] reg_wdata_o,       // 写寄存器数据
     output wire reg_we_o,                   // 是否要写通用寄存器
     output wire[`RegAddrBus] reg_waddr_o,   // 写通用寄存器地址

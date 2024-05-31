@@ -58,7 +58,10 @@ module id_ex(
 
     );
 
-    wire hold_en = (hold_flag_i >= `Hold_Id);
+    wire stall;
+    wire flush;
+    assign stall = stall_flag_i;
+    assign flush = (hold_flag_i >= `Hold_Id);
 
     always @ (posedge clk) begin
         if (!rst) begin
@@ -76,7 +79,7 @@ module id_ex(
             inst_addr_o <= `ZeroWord;
             inst_o      <= `INST_NOP;
             prdt_taken_o <= 1'b0;
-        end else if(stall_flag_i) begin
+        end else if(stall) begin
             op1_o      <= op1_o;
             op2_o      <= op2_o;
             op1_jump_o <= op1_jump_o;
@@ -91,7 +94,7 @@ module id_ex(
             inst_addr_o <= inst_addr_o;
             inst_o      <= inst_o;
             prdt_taken_o <= prdt_taken_o;
-        end else if(hold_en) begin
+        end else if(flush) begin
             op1_jump_o <= `ZeroWord;
             op2_jump_o <= `ZeroWord;
             op2_o      <= `ZeroWord;
