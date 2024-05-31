@@ -23,8 +23,6 @@ module ifu (
     wire inst_bxx;
     wire inst_jalr;
     wire [`InstAddrBus] jump_and_branch_imm;
-    wire bpu_prdt_taken_o;
-    wire [`InstAddrBus] bpu_prdt_addr_o;
 
     assign if_inst_addr_o = pc_i;
     assign if_inst_o = inst_i;
@@ -44,8 +42,8 @@ module ifu (
         .inst_jalr_i(inst_jalr),
         .inst_bxx_i(inst_bxx),
         .jump_and_branch_imm_i(jump_and_branch_imm),
-        .prdt_taken_o(bpu_prdt_taken_o),
-        .prdt_addr_o(bpu_prdt_addr_o)
+        .prdt_taken_o(if_prdt_taken_o),
+        .prdt_addr_o(if_prdt_addr_o)
     );
 
 endmodule
