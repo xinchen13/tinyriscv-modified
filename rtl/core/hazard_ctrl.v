@@ -20,9 +20,9 @@ module hazard_ctrl (
 
     always @ (*) begin
         if((id_reg2_raddr_i == ex_reg_waddr_i) && (ex_reg_we_i == 1'b1 ))
-            fwd_reg1_o = 1'b1;
+            fwd_reg2_o = 1'b1;
         else
-            fwd_reg1_o = 1'b0;
+            fwd_reg2_o = 1'b0;
     end
 
 endmodule
