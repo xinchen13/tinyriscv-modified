@@ -12,6 +12,7 @@ module ex_wb (
     output reg [`RegBus] reg_wdata_o,
     output reg reg_we_o,
 
+    input wire[`Hold_Flag_Bus] hold_flag_i,
     input wire stall_flag_i
 
 );

@@ -391,6 +391,7 @@ module tinyriscv(
         .reg_waddr_o(wb_reg_waddr_o),
         .reg_wdata_o(wb_reg_wdata_o),
         .reg_we_o(wb_reg_we_o),
+        .hold_flag_i(ctrl_hold_flag_o),
         .stall_flag_i(ex_stall_o)
     );
 
