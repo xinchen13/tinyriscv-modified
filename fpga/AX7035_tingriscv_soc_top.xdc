@@ -23,14 +23,17 @@ set_property IOSTANDARD LVCMOS33 [get_ports uart_rx_pin]
 set_property PACKAGE_PIN G15 [get_ports uart_rx_pin]
 
 # PWM 引脚
-set_property IOSTANDARD LVCMOS33 [get_ports PWM_o[0]]
-set_property PACKAGE_PIN E21 [get_ports PWM_o[0]]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_o[0]]
+set_property PACKAGE_PIN E21 [get_ports pwm_o[0]]
 
-set_property IOSTANDARD LVCMOS33 [get_ports PWM_o[1]]
-set_property PACKAGE_PIN D20 [get_ports PWM_o[1]]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_o[1]]
+set_property PACKAGE_PIN D20 [get_ports pwm_o[1]]
 
-set_property IOSTANDARD LVCMOS33 [get_ports PWM_o[2]]
-set_property PACKAGE_PIN C20 [get_ports PWM_o[2]]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_o[2]]
+set_property PACKAGE_PIN C20 [get_ports pwm_o[2]]
+
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_o[3]]
+set_property PACKAGE_PIN E16 [get_ports pwm_o[3]]
 
 # GPIO引脚
 set_property IOSTANDARD LVCMOS33 [get_ports {gpio[*]}]
@@ -51,6 +54,11 @@ set_property PACKAGE_PIN M17 [get_ports {gpio[13]}]
 set_property PACKAGE_PIN B20 [get_ports {gpio[14]}]
 set_property PACKAGE_PIN D17 [get_ports {gpio[15]}]
 
+
+# over 引脚
+set_property IOSTANDARD LVCMOS33 [get_ports over]
+set_property PACKAGE_PIN D16 [get_ports over]
+
 # I2C 引脚
 set_property IOSTANDARD LVCMOS33 [get_ports io_scl]
 set_property PACKAGE_PIN M22 [get_ports io_scl]
@@ -69,3 +77,26 @@ set_property PACKAGE_PIN M13 [get_ports uart_debug_pin]
 set_property IOSTANDARD LVCMOS33 [get_ports baud_update_en]
 set_property PACKAGE_PIN K14 [get_ports baud_update_en]
 
+# chip_sel 引脚
+set_property IOSTANDARD LVCMOS33 [get_ports chip_sel]
+set_property PACKAGE_PIN K13 [get_ports chip_sel]
+
+# jtag 
+set_property IOSTANDARD LVCMOS33 [get_ports jtag_TCK]
+set_property PACKAGE_PIN F14 [get_ports jtag_TCK]
+set_property IOSTANDARD LVCMOS33 [get_ports jtag_TMS]
+set_property PACKAGE_PIN F13 [get_ports jtag_TMS]
+set_property IOSTANDARD LVCMOS33 [get_ports jtag_TDI]
+set_property PACKAGE_PIN E14 [get_ports jtag_TDI]
+set_property IOSTANDARD LVCMOS33 [get_ports jtag_TDO]
+set_property PACKAGE_PIN E13 [get_ports jtag_TDO]
+
+# spi
+set_property IOSTANDARD LVCMOS33 [get_ports spi_miso]
+set_property PACKAGE_PIN D15 [get_ports spi_miso]
+set_property IOSTANDARD LVCMOS33 [get_ports spi_mosi]
+set_property PACKAGE_PIN D14 [get_ports spi_mosi]
+set_property IOSTANDARD LVCMOS33 [get_ports spi_ss]
+set_property PACKAGE_PIN B13 [get_ports spi_ss]
+set_property IOSTANDARD LVCMOS33 [get_ports spi_clk]
+set_property PACKAGE_PIN C13 [get_ports spi_clk]

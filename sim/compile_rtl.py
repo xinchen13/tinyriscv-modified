@@ -19,6 +19,7 @@ def main():
     # 顶层模块
     #iverilog_cmd += ['-s', r'tinyriscv_soc_tb']
     # 编译生成文件
+    iverilog_cmd += ['-g2012']
     iverilog_cmd += ['-o', r'out.vvp']
     # 头文件(defines.vh)路径
     iverilog_cmd += ['-I', rtl_dir + r'/rtl/header']
@@ -26,25 +27,41 @@ def main():
     iverilog_cmd += ['-D', r'OUTPUT="signature.output"']
     # testbench文件
     iverilog_cmd.append(rtl_dir + tb_file)
-    # ../rtl/core
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/clint.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/csr_reg.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/ctrl.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/div.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/ex.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/id.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/id_ex.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/if_id.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/pc_reg.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/regs.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/rib.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/tinyriscv.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/pre_id.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/bpu.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/ifu.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/ex_wb.v')
-    iverilog_cmd.append(rtl_dir + r'/rtl/core/hazard_ctrl.v')
+    # ../rtl/core_2023211061
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/clint.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/compress.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/csr_reg.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/ctrl.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/div.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/ex.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/gen_en_dff.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/id_ex.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/id.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/if_id.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/instr_fetch.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/lsu.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/pc_reg.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/regs.sv')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211061/tinyriscv.sv')
+    # ../rtl/core_2023211063
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/clint_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/csr_reg_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/ctrl_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/div_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/ex_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/id_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/id_ex_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/if_id_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/pc_reg_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/regs_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/tinyriscv_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/pre_id_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/bpu_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/ifu_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/ex_wb_2023211063.v')
+    iverilog_cmd.append(rtl_dir + r'/rtl/core_2023211063/hazard_ctrl_2023211063.v')
     # ../rtl/perips
+    iverilog_cmd.append(rtl_dir + r'/rtl/perips/rib.sv')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/ram.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/rom.v')
     iverilog_cmd.append(rtl_dir + r'/rtl/perips/timer.v')
@@ -68,6 +85,7 @@ def main():
     iverilog_cmd.append(rtl_dir + r'/rtl/utils/gen_pulse.v')
 
     iverilog_cmd.append(rtl_dir + r'/rtl/header/defines.vh')
+    iverilog_cmd.append(rtl_dir + r'/rtl/header/tinyriscv_pkg.sv')
 
     # 编译
     process = subprocess.Popen(iverilog_cmd)

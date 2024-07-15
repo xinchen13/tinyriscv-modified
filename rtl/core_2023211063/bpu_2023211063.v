@@ -1,6 +1,6 @@
 `include "../header/defines.vh"
 
-module bpu(
+module bpu_2023211063(
     input wire [`InstAddrBus] pc_i,
     input wire inst_jal_i,
     input wire inst_jalr_i,

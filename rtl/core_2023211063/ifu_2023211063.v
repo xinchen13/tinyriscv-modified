@@ -1,6 +1,6 @@
 `include "../header/defines.vh"
 
-module ifu (
+module ifu_2023211063 (
     // from pc reg
     input wire [`InstAddrBus] pc_i,
 
@@ -28,7 +28,7 @@ module ifu (
     assign if_inst_o = inst_i;
     assign rib_pc_addr_o = pc_i;
 
-    pre_id u_pre_id(
+    pre_id_2023211063 u_pre_id_2023211063(
         .inst_i(inst_i),
         .inst_jal_o(inst_jal),
         .inst_jalr_o(inst_jalr),
@@ -36,7 +36,7 @@ module ifu (
         .jump_and_branch_imm_o(jump_and_branch_imm)
     );
 
-    bpu u_bpu(
+    bpu_2023211063 u_bpu_2023211063(
         .pc_i(pc_i),
         .inst_jal_i(inst_jal),
         .inst_jalr_i(inst_jalr),

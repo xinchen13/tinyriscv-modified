@@ -1,7 +1,7 @@
 `include "../header/defines.vh"
 
 // 流水线冒险解决
-module hazard_ctrl (
+module hazard_ctrl_2023211063 (
     input wire [`RegAddrBus] id_reg1_raddr_i,
     input wire [`RegAddrBus] id_reg2_raddr_i,
     input wire [`RegAddrBus] ex_reg_waddr_i,

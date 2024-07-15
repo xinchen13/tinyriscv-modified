@@ -8,9 +8,9 @@ module tinyriscv_soc_tb;
     reg rst;
     always #10 clk = ~clk;     // 50MHz
 
-    wire[`RegBus] x3 = tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[3];
-    wire[`RegBus] x26 = tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[26];
-    wire[`RegBus] x27 = tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[27];
+    wire[`RegBus] x3 = tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[3];
+    wire[`RegBus] x26 = tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[26];
+    wire[`RegBus] x27 = tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[27];
 
     integer r;
 
@@ -48,7 +48,7 @@ module tinyriscv_soc_tb;
                 $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 $display("fail testnum = %2d", x3);
                 for (r = 0; r < 32; r = r + 1)
-                    $display("x%2d = 0x%x", r, tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[r]);
+                    $display("x%2d = 0x%x", r, tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[r]);
             end
         `endif
         $finish;

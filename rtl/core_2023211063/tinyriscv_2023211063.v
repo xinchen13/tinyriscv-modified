@@ -17,7 +17,7 @@
 `include "../header/defines.vh"
 
 // tinyriscv处理器核顶层模块
-module tinyriscv(
+module tinyriscv_2023211063(
 
     input wire clk,
     input wire rst,
@@ -166,7 +166,7 @@ module tinyriscv(
     wire fwd_reg2;
 
     // pc_reg模块例化
-    pc_reg u_pc_reg(
+    pc_reg_2023211063 u_pc_reg_2023211063(
         .clk(clk),
         .rst(rst),
         .jtag_reset_flag_i(jtag_reset_flag_i),
@@ -180,7 +180,7 @@ module tinyriscv(
     );
 
 
-    ifu u_ifu(
+    ifu_2023211063 u_ifu_2023211063(
         .pc_i(pc_pc_o),
         .inst_i(rib_pc_data_i),
         .if_prdt_taken_o(if_prdt_taken_o), 
@@ -191,7 +191,7 @@ module tinyriscv(
     );
 
     // ctrl模块例化
-    ctrl u_ctrl(
+    ctrl_2023211063 u_ctrl_2023211063(
         .rst(rst),
         .jump_flag_i(ex_jump_flag_o),
         .jump_addr_i(ex_jump_addr_o),
@@ -205,7 +205,7 @@ module tinyriscv(
     );
 
     // regs模块例化
-    regs u_regs(
+    regs_2023211063 u_regs_2023211063(
         .clk(clk),
         .rst(rst),
         .we_i(wb_reg_we_o),
@@ -222,7 +222,7 @@ module tinyriscv(
     );
 
     // csr_reg模块例化
-    csr_reg u_csr_reg(
+    csr_reg_2023211063 u_csr_reg_2023211063(
         .clk(clk),
         .rst(rst),
         .we_i(ex_csr_we_o),
@@ -242,7 +242,7 @@ module tinyriscv(
     );
 
     // if_id模块例化
-    if_id u_if_id(
+    if_id_2023211063 u_if_id_2023211063(
         .clk(clk),
         .rst(rst),
         .inst_i(if_inst_o),
@@ -258,7 +258,7 @@ module tinyriscv(
     );
 
     // id模块例化
-    id u_id(
+    id_2023211063 u_id_2023211063(
         .rst(rst),
         .inst_i(fd_inst_o),
         .inst_addr_i(fd_inst_addr_o),
@@ -289,7 +289,7 @@ module tinyriscv(
         .fwd_reg2_i(fwd_reg2)
     );
 
-    hazard_ctrl u_hazard_ctrl(
+    hazard_ctrl_2023211063 u_hazard_ctrl_2023211063(
         .id_reg1_raddr_i(id_reg1_raddr_o),
         .id_reg2_raddr_i(id_reg2_raddr_o),
         .ex_reg_waddr_i(ex_reg_waddr_o),
@@ -299,7 +299,7 @@ module tinyriscv(
     );
 
     // id_ex模块例化
-    id_ex u_id_ex(
+    id_ex_2023211063 u_id_ex_2023211063(
         .clk(clk),
         .rst(rst),
         .inst_i(id_inst_o),
@@ -335,7 +335,7 @@ module tinyriscv(
     );
 
     // ex模块例化
-    ex u_ex(
+    ex_2023211063 u_ex_2023211063(
         .clk(clk),
         .rst(rst),
         .inst_i(ie_inst_o),
@@ -382,7 +382,7 @@ module tinyriscv(
         .prdt_taken_i(ie_prdt_taken_o)
     );
 
-    ex_wb u_ex_wb(
+    ex_wb_2023211063 u_ex_wb_2023211063(
         .clk(clk),
         .rst(rst),
         .reg_waddr_i(ex_reg_waddr_o),
@@ -396,7 +396,7 @@ module tinyriscv(
     );
 
     // div模块例化
-    div u_div(
+    div_2023211063 u_div_2023211063(
         .clk(clk),
         .rst(rst),
         .dividend_i(ex_div_dividend_o),
@@ -411,7 +411,7 @@ module tinyriscv(
     );
 
     // clint模块例化
-    clint u_clint(
+    clint_2023211063 u_clint_2023211063(
         .clk(clk),
         .rst(rst),
         .int_flag_i(fd_int_flag_o),

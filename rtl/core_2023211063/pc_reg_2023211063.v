@@ -17,7 +17,7 @@
 `include "../header/defines.vh"
 
 // PC寄存器模块
-module pc_reg(
+module pc_reg_2023211063(
 
     input wire clk,
     input wire rst,

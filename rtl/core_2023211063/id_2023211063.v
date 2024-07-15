@@ -18,7 +18,7 @@
 
 // 译码模块
 // 纯组合逻辑电路
-module id(
+module id_2023211063(
 
 	input wire rst,
 

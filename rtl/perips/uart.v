@@ -22,6 +22,7 @@ module uart(
 	input wire clk,
 	input wire rst,
     input wire baud_update_en,
+    input wire chip_sel,
 
     // rib interface
     input wire we_i,
@@ -228,7 +229,13 @@ module uart(
                 end
                 else if (id_state == ID_SEND_9) begin
                     if (uart_status[0] == 1'b0) begin
-                        tx_data <= 8'h33;
+                        tx_data <= chip_sel ? 8'h31 : 8'h33;
+                        // if (chip_sel == 1'b0) begin
+                        //     tx_data <= 8'h33;
+                        // end
+                        // else begin
+                        //     tx_data <= 8'h31;
+                        // end
                         uart_status[0] <= 1'b1;
                         tx_data_valid <= 1'b1;
                         id_state <= ID_IDLE;

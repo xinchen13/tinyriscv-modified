@@ -18,7 +18,7 @@
 
 // 执行模块
 // 纯组合逻辑电路
-module ex(
+module ex_2023211063(
 
     input wire clk,
     input wire rst,

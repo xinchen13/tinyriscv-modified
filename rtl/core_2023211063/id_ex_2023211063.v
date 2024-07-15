@@ -17,7 +17,7 @@
 `include "../header/defines.vh"
 
 // 将译码结果向执行模块传递
-module id_ex(
+module id_ex_2023211063(
 
     input wire clk,
     input wire rst,

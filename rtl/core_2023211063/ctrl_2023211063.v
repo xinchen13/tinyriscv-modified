@@ -18,7 +18,7 @@
 
 // 控制模块
 // 发出跳转、暂停流水线信号
-module ctrl(
+module ctrl_2023211063(
 
     input wire rst,
 

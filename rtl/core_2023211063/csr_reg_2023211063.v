@@ -17,7 +17,7 @@
 `include "../header/defines.vh"
 
 // CSR寄存器模块
-module csr_reg(
+module csr_reg_2023211063(
 
     input wire clk,
     input wire rst,

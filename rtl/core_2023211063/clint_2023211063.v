@@ -19,7 +19,7 @@
 
 // core local interruptor module
 // 核心中断管理、仲裁模块
-module clint(
+module clint_2023211063(
 
     input wire clk,
     input wire rst,

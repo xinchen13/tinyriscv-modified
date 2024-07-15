@@ -19,7 +19,7 @@
 // 除法模块
 // 试商法实现32位整数除法
 // 每次除法运算至少需要33个时钟周期才能完成
-module div(
+module div_2023211063(
 
     input wire clk,
     input wire rst,

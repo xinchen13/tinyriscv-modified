@@ -17,7 +17,7 @@
 `include "../header/defines.vh"
 
 // 通用寄存器模块
-module regs(
+module regs_2023211063(
 
     input wire clk,
     input wire rst,
