@@ -100,3 +100,5 @@ set_property IOSTANDARD LVCMOS33 [get_ports spi_ss]
 set_property PACKAGE_PIN B13 [get_ports spi_ss]
 set_property IOSTANDARD LVCMOS33 [get_ports spi_clk]
 set_property PACKAGE_PIN C13 [get_ports spi_clk]
+
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets jtag_TCK_IBUF] 
