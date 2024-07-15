@@ -14,8 +14,8 @@ static int rT(){ // sID拓展指令
 
 int main()
 {
-	// *(unsigned int *)0x30000008 = 550;	// uart 分频系数： 62.5MHz
-	// *(unsigned int *)0x70050000 = 625;	// i2c 分频系数： 62.5MHz
+	*(unsigned int *)0x30000008 = 550;	// uart 分频系数： 62.5MHz
+	*(unsigned int *)0x70050000 = 625;	// i2c 分频系数： 62.5MHz
 	// *(unsigned int *)0x70050000 = 500;	// i2c 分频系数： 50 MHz
 
 	int Temperature;
