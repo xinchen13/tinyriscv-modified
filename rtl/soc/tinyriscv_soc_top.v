@@ -222,7 +222,7 @@ module tinyriscv_soc_top(
     // tinyriscv 处理器核模块例化: yw - chip_sel = 1'b1
     tinyriscv_yw u_tinyriscv (
         .clk_i         (clk),
-        .rst_ni        (rst & ~uart_debug_pin),
+        .rst_ni        (rst),
         .rib_ex_addr_o (m0_addr_i_yw),
         .rib_ex_data_i (m0_data_o),
         .rib_ex_data_o (m0_data_i_yw),

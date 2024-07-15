@@ -193,7 +193,7 @@ module ex_yw
     end
 
     always_comb begin
-        mem_hold = mem_req ^ mem_ready_i;
+        mem_hold = mem_req &  (~mem_ready_i);
     end
 
     // 单周期代码
