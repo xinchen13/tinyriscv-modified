@@ -200,7 +200,7 @@ module tinyriscv_soc_top(
     // tinyriscv 处理器核模块例化: xinchen - chip_sel = 1'b0
     tinyriscv_2023211063 u_tinyriscv_2023211063(
         .clk(clk),
-        .rst(rst),
+        .rst(rst & (~chip_sel)),
         .rib_ex_addr_o(m0_addr_i_2023211063),
         .rib_ex_data_i(m0_data_o),
         .rib_ex_data_o(m0_data_i_2023211063),
@@ -228,16 +228,11 @@ module tinyriscv_soc_top(
         .button_in (rst),   // Raw button input
         .button_out(rst_nid)   // Debounced button output
     );
-    // debounce u_debounce_debug (
-    //     .clk_i(clk),   // Clock input
-    //     .button_in (uart_debug_pin),   // Raw button input
-    //     .button_out(uart_debug_pind)   // Debounced button output
-    // );
 
     // tinyriscv 处理器核模块例化: yw - chip_sel = 1'b1
     tinyriscv_yw u_tinyriscv (
         .clk_i         (clk),
-        .rst_ni        (rst_nid),
+        .rst_ni        (rst_nid & chip_sel),
         .rib_ex_addr_o (m0_addr_i_yw),
         .rib_ex_data_i (m0_data_o),
         .rib_ex_data_o (m0_data_i_yw),
