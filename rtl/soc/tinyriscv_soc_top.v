@@ -219,15 +219,15 @@ module tinyriscv_soc_top(
         .int_i(int_flag)
     );
 
-    logic rst_nid;
-    logic uart_debug_pind;
+    wire rst_nid;
+    wire uart_debug_pind;
     debounce u_debounce_rst (
-        .clk_i,   // Clock input
+        .clk_i(clk),   // Clock input
         .button_in (rst),   // Raw button input
         .button_out(rst_nid)   // Debounced button output
     );
     debounce u_debounce_debug (
-        .clk_i,   // Clock input
+        .clk_i(clk),   // Clock input
         .button_in (uart_debug_pin),   // Raw button input
         .button_out(uart_debug_pind)   // Debounced button output
     );
