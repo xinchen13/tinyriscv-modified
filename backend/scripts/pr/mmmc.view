@@ -1,0 +1,67 @@
+# -------------------------------------------------------------
+# Create RC corner
+# -------------------------------------------------------------
+if [info exists ::env(CAP_TABLE)] {create_rc_corner -name rc_max -preRoute_res 1.05 \
+    -cap_table $::env(CAP_TABLE) \
+    -preRoute_cap 1.05 \
+    -preRoute_clkres 1.05 \
+    -postRoute_res 1.05 \
+    -postRoute_cap 1.05 \
+    -postRoute_xcap 1.05 \
+    -postRoute_clkres 1.05 \
+    -postRoute_clkcap 1.05 
+create_rc_corner -name rc_min -preRoute_res 1 \
+    -cap_table $::env(CAP_TABLE) \
+    -preRoute_cap 1 \
+    -preRoute_clkres 1 \
+    -postRoute_res 1 \
+    -postRoute_cap 1 \
+    -postRoute_xcap 1 \
+    -postRoute_clkres 1 \
+    -postRoute_clkcap 1 
+} else {create_rc_corner -name rc_max -preRoute_res 1.05 \
+    -preRoute_cap 1.05 \
+    -preRoute_clkres 1.05 \
+    -postRoute_res 1.05 \
+    -postRoute_cap 1.05 \
+    -postRoute_xcap 1.05 \
+    -postRoute_clkres 1.05 \
+    -postRoute_clkcap 1.05 
+create_rc_corner -name rc_min -preRoute_res 1 \
+    -preRoute_cap 1 \
+    -preRoute_clkres 1 \
+    -postRoute_res 1 \
+    -postRoute_cap 1 \
+    -postRoute_xcap 1 \
+    -postRoute_clkres 1 \
+    -postRoute_clkcap 1 
+}
+
+
+# -------------------------------------------------------------
+# Set the lib
+# -------------------------------------------------------------
+create_library_set -name lib_set_max -timing $::env(LIB_FILES)
+create_library_set -name lib_set_min -timing $::env(LIB_FILES)
+
+# -------------------------------------------------------------
+# Set the SDC FILE
+# -------------------------------------------------------------
+create_constraint_mode -name common -sdc_files $::env(PR_SDC_FILE)
+
+# -------------------------------------------------------------
+# Create the delay corner
+# -------------------------------------------------------------
+create_delay_corner -name delay_max -library_set {lib_set_max} -rc_corner {rc_max}
+create_delay_corner -name delay_min -library_set {lib_set_min} -rc_corner {rc_min}
+
+# -------------------------------------------------------------
+# Create the analysis view
+# -------------------------------------------------------------
+create_analysis_view -name max_view -constraint_mode {common} -delay_corner {delay_max}
+create_analysis_view -name min_view -constraint_mode {common} -delay_corner {delay_min}
+
+# -------------------------------------------------------------
+# Set the analysis view for setup&hold
+# -------------------------------------------------------------
+set_analysis_view -setup {max_view} -hold {min_view}

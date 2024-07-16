@@ -1,0 +1,49 @@
+// ENVIROMENT SETTING
+
+PRECISION 1000
+RESOLUTION 5
+
+LAYOUT SYSTEM GDSII
+LAYOUT PATH "./result/pv/drc/data/ibex_core.merge.gds"
+LAYOUT PRIMARY "ibex_core"
+
+DRC RESULTS DATABASE "DRC_RES.db"
+
+
+//Layer Define 
+LAYER diff 2
+LAYER tap 3
+LAYER nwell 4
+LAYER dwell 5
+LAYER pwbm 6
+LAYER pwde 7
+LAYER hvtr 8
+LAYER hvtp 9
+LAYER ldntm 10
+LAYER hvi 11
+LAYER tunm 12
+LAYER lvtn 13
+LAYER poly 14
+LAYER hvntm 15
+LAYER nsdm 16 
+LAYER psdm 17
+LAYER rpm 18
+LAYER urpm 19
+LAYER npc 20
+LAYER licon1 21
+LAYER li1 22
+LAYER mcon 23
+LAYER met1 24
+LAYER via 25
+LAYER met2 26
+LAYER via2 27
+LAYER met3 28
+LAYER via3 29
+LAYER met4 30
+LAYER via4 31
+LAYER met5 32
+
+//Rule define
+rule_1 {@met1 minimum width is 100
+		INTERNAL met1<100
+}
