@@ -215,12 +215,12 @@ module ex_yw
                 if (funct3 == INST_ID_FUN3) begin
                     mem_we      = WriteEnable;
                     mem_req     = RIB_REQ;
-                    mem_addr_o  = 32'h30000014;
-                    mem_wdata_o = '0;
+                    mem_addr_o  = 32'h30000000;
+                    mem_wdata_o = 32'h5;
                 end
                 if (funct3 == INST_TEMP_FUN3) begin
                     mem_req    = RIB_REQ;
-                    mem_addr_o = 32'h70020000;
+                    mem_addr_o = 32'h70030000;
                     reg_wdata  = mem_rdata_i;
                 end
                 if (funct3 == INST_INFI_FUN3) begin
