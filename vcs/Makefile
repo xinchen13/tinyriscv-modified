@@ -2,6 +2,7 @@
 
 #compile command 
 VCS	=	vcs +v2k  -timescale=1ns/1ps	\
+			-top tinyriscv_soc_tb	\
 			-sverilog	\
 			-full64	\
 			-R 		\

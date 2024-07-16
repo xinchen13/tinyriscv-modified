@@ -59,8 +59,6 @@
 ../rtl/utils/gen_en_dff.sv
 ../rtl/utils/full_handshake_rx.v
 ../rtl/utils/full_handshake_tx.v
-../rtl/utils/gen_buf.v
-../rtl/utils/gen_dff.v
 ../rtl/utils/gen_pulse.v
 ../rtl/utils/debounce.sv
 ../rtl/utils/fifo.sv
