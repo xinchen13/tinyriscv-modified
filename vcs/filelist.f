@@ -22,7 +22,6 @@
 ../rtl/core_2023211063/ifu_2023211063.v
 
 # core_2023211061
-../rtl/core_2023211061/gen_en_dff.sv
 ../rtl/core_2023211061/instr_fetch.sv
 ../rtl/core_2023211061/clint.sv
 ../rtl/core_2023211061/compress.sv
@@ -34,10 +33,7 @@
 ../rtl/core_2023211061/id_ex.sv
 ../rtl/core_2023211061/div.sv
 ../rtl/core_2023211061/regs.sv
-../rtl/core_2023211061/pc_reg.sv
 ../rtl/core_2023211061/ex.sv
-../rtl/core_2023211061/fifo.sv
-../rtl/core_2023211061/lsu.sv
 
 # perips
 ../rtl/perips/ram.v
@@ -60,12 +56,14 @@
 ../rtl/soc/tinyriscv_soc_top.v
 
 # utils
+../rtl/utils/gen_en_dff.sv
 ../rtl/utils/full_handshake_rx.v
 ../rtl/utils/full_handshake_tx.v
 ../rtl/utils/gen_buf.v
 ../rtl/utils/gen_dff.v
 ../rtl/utils/gen_pulse.v
 ../rtl/utils/debounce.sv
+../rtl/utils/fifo.sv
 
 // Testbench
 ../tb/tinyriscv_soc_tb_vcs.v

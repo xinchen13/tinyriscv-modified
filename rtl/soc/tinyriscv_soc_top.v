@@ -52,6 +52,10 @@ module tinyriscv_soc_top(
     output wire spi_clk      // SPI CLK引脚
     );
 
+    // 按键消抖
+    wire rst_nid;
+    wire uart_debug_pind;
+    
     // master 0 interface
     wire[`MemAddrBus] m0_addr_i;
     wire[`MemBus] m0_data_i;
@@ -219,8 +223,6 @@ module tinyriscv_soc_top(
         .int_i(int_flag)
     );
 
-    wire rst_nid;
-    wire uart_debug_pind;
     debounce u_debounce_rst (
         .clk_i(clk),   // Clock input
         .button_in (rst),   // Raw button input
