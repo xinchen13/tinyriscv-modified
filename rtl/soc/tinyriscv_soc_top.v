@@ -169,7 +169,7 @@ module tinyriscv_soc_top(
     assign over = over_temp;
     assign succ = succ_temp;
     always @ (posedge clk) begin
-        if (rst_nid == `RstEnable) begin
+        if (rst == `RstEnable) begin
             over_temp <= 1'b1;
             succ_temp <= 1'b1;
         end else begin
@@ -200,7 +200,7 @@ module tinyriscv_soc_top(
     // tinyriscv 处理器核模块例化: xinchen - chip_sel = 1'b0
     tinyriscv_2023211063 u_tinyriscv_2023211063(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .rib_ex_addr_o(m0_addr_i_2023211063),
         .rib_ex_data_i(m0_data_o),
         .rib_ex_data_o(m0_data_i_2023211063),
@@ -228,11 +228,11 @@ module tinyriscv_soc_top(
         .button_in (rst),   // Raw button input
         .button_out(rst_nid)   // Debounced button output
     );
-    debounce u_debounce_debug (
-        .clk_i(clk),   // Clock input
-        .button_in (uart_debug_pin),   // Raw button input
-        .button_out(uart_debug_pind)   // Debounced button output
-    );
+    // debounce u_debounce_debug (
+    //     .clk_i(clk),   // Clock input
+    //     .button_in (uart_debug_pin),   // Raw button input
+    //     .button_out(uart_debug_pind)   // Debounced button output
+    // );
 
     // tinyriscv 处理器核模块例化: yw - chip_sel = 1'b1
     tinyriscv_yw u_tinyriscv (
@@ -265,7 +265,7 @@ module tinyriscv_soc_top(
     // rom模块例化
     rom u_rom(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .we_i(s0_we_o),
         .addr_i(s0_addr_o),
         .data_i(s0_data_o),
@@ -275,7 +275,7 @@ module tinyriscv_soc_top(
     // ram模块例化
     ram u_ram(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .we_i(s1_we_o),
         .addr_i(s1_addr_o),
         .data_i(s1_data_o),
@@ -285,7 +285,7 @@ module tinyriscv_soc_top(
     // timer模块例化
     timer timer_0(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .data_i(s2_data_o),
         .addr_i(s2_addr_o),
         .we_i(s2_we_o),
@@ -296,7 +296,7 @@ module tinyriscv_soc_top(
     // uart模块例化
     uart uart_0(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .baud_update_en(~baud_update_en),
         .chip_sel(chip_sel),
         .we_i(s3_we_o),
@@ -346,7 +346,7 @@ module tinyriscv_soc_top(
     // gpio模块例化
     gpio gpio_0(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .we_i(s4_we_o),
         .addr_i(s4_addr_o),
         .data_i(s4_data_o),
@@ -359,7 +359,7 @@ module tinyriscv_soc_top(
     // spi模块例化
     spi spi_0(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .data_i(s5_data_o),
         .addr_i(s5_addr_o),
         .we_i(s5_we_o),
@@ -373,7 +373,7 @@ module tinyriscv_soc_top(
     // pwm模块例化
     pwm pwm_0(
         .clk(clk),
-        .rst(rst_nid),
+        .rst(rst),
         .data_i(s6_data_o),
         .addr_i(s6_addr_o),
         .we_i(s6_we_o),
@@ -384,7 +384,7 @@ module tinyriscv_soc_top(
     // i2c模块例化
     i2c i2c_0(
         .clk(clk),
-        .rst_n(rst_nid),
+        .rst_n(rst),
         .data_i(s7_data_o),
         .addr_i(s7_addr_o),
         .we_i(s7_we_o),
@@ -487,8 +487,8 @@ module tinyriscv_soc_top(
     // 串口下载模块例化
     uart_debug u_uart_debug(
         .clk(clk),
-        .rst(rst_nid),
-        .debug_en_i(uart_debug_pind),
+        .rst(rst),
+        .debug_en_i(uart_debug_pin),
         .req_o(m3_req_i),
         .mem_we_o(m3_we_i),
         .mem_addr_o(m3_addr_i),
@@ -503,7 +503,7 @@ module tinyriscv_soc_top(
         .DMI_OP_BITS(2)
     ) u_jtag_top(
         .clk(clk),
-        .jtag_rst_n(rst_nid),
+        .jtag_rst_n(rst),
         .jtag_pin_TCK(jtag_TCK),
         .jtag_pin_TMS(jtag_TMS),
         .jtag_pin_TDI(jtag_TDI),
