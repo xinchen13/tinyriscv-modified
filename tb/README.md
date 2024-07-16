@@ -1,3 +1,0 @@
-tinyriscv_soc_tb.v是适用于旧的指令测试testbench文件。
-
-compliance_test/tinyriscv_soc_tb.v是适用于新的指令测试testbench文件。
