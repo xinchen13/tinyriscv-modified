@@ -1,4 +1,8 @@
 // Source file
+# header
+../rtl/header/defines.vh
+../rtl/header/tinyriscv_pkg.sv
+
 # core_2023211063
 ../rtl/core_2023211063/clint_2023211063.v
 ../rtl/core_2023211063/csr_reg_2023211063.v
@@ -62,10 +66,6 @@
 ../rtl/utils/gen_dff.v
 ../rtl/utils/gen_pulse.v
 ../rtl/utils/debounce.sv
-
-# header
-../rtl/header/defines.vh
-../rtl/header/tinyriscv_pkg.sv
 
 // Testbench
 ../tb/tinyriscv_soc_tb_vcs.v

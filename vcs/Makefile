@@ -2,6 +2,7 @@
 
 #compile command 
 VCS	=	vcs +v2k  -timescale=1ns/1ps	\
+			-sverilog	\
 			-full64	\
 			-R 		\
 			-debug_access+all	\
