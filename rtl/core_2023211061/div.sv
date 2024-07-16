@@ -10,8 +10,7 @@ module div_yw
     input  logic [WIDTH-1:0] divisor_i,
     input        [      2:0] op_i,
     output logic [WIDTH-1:0] data_o,
-    output logic             ready_o,
-    output logic             error_o      // 新增的输出信号，用于指示除数为零的错误情况
+    output logic             ready_o
 );
 
     // Internal states and signals
@@ -44,19 +43,17 @@ module div_yw
         else
             unique case (state)
                 STATE_IDLE: begin
-                    if (valid_i) begin
-                        if (divisor_i == 0) next_state = STATE_ERROR;
-                        else next_state = STATE_CALC;
-                    end
+                    next_state = STATE_CALC;
+
+                    if (divisor_i == 32'b0) next_state = STATE_ERROR;
+                    else if (divisor_i == 32'hffff_ffff && dividend_i == 32'h8000_0000) next_state = STATE_ERROR;
                 end
                 STATE_CALC: begin
                     if (count == 0) next_state = STATE_END;
                 end
                 STATE_END: next_state = STATE_IDLE;
                 STATE_ERROR: begin
-                    if (~valid_i) begin
-                        next_state = STATE_IDLE;
-                    end
+                    next_state = STATE_IDLE;
                 end
             endcase
     end
@@ -74,7 +71,7 @@ module div_yw
 
             result_neg     <= '0;
             ready_o        <= '0;
-            error_o        <= '0;
+
             data_o         <= '0;
         end
         else begin
@@ -91,7 +88,7 @@ module div_yw
                     temp_remainder <= '0;
                     result_neg     <= is_signed && (dividend_i[WIDTH-1] ^ divisor_i[WIDTH-1]);
                     ready_o        <= '0;
-                    error_o        <= '0;
+
                     data_o         <= '0;
                 end
                 STATE_CALC: begin
@@ -114,7 +111,20 @@ module div_yw
                 end
                 STATE_ERROR: begin
                     ready_o <= '1;
-                    error_o <= '1;
+                    if (divisor_i == 32'b0)
+                        case (op_i)
+                            INST_DIV:  data_o <= '1;
+                            INST_DIVU: data_o <= '1;
+                            INST_REM:  data_o <= dividend_i;
+                            INST_REMU: data_o <= dividend_i;
+                            default:   data_o <= '0;
+                        endcase
+                    else if (divisor_i == 32'hffff_ffff && dividend_i == 32'h8000_0000)
+                        case (op_i)
+                            INST_DIV: data_o <= dividend_i;
+                            INST_REM: data_o <= '0;
+                            default:  data_o <= '0;
+                        endcase
                 end
             endcase
         end

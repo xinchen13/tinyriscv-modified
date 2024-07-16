@@ -107,7 +107,7 @@ module fifo_v3 #(
     end
 
     // sequential process
-    always_ff @(posedge clk_i or negedge rst_ni) begin
+    always_ff @(posedge clk_i) begin
         if (~rst_ni) begin
             read_pointer_q  <= '0;
             write_pointer_q <= '0;
@@ -127,7 +127,7 @@ module fifo_v3 #(
         end
     end
 
-    always_ff @(posedge clk_i or negedge rst_ni) begin
+    always_ff @(posedge clk_i) begin
         if (~rst_ni) begin
             mem_q <= '0;
         end
