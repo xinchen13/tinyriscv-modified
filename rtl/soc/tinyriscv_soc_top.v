@@ -55,7 +55,7 @@ module tinyriscv_soc_top(
     // 按键消抖
     wire rst_nid;
     wire uart_debug_pind;
-    
+
     // master 0 interface
     wire[`MemAddrBus] m0_addr_i;
     wire[`MemBus] m0_data_i;
@@ -451,6 +451,7 @@ module tinyriscv_soc_top(
         .s3_data_i(s3_data_i),
         .s3_we_o(s3_we_o),
         .s3_ready_i(1'b1),
+        .s3_req_o(),
 
         // slave 4 interface
         .s4_addr_o(s4_addr_o),
@@ -470,7 +471,7 @@ module tinyriscv_soc_top(
         .s6_data_i(s6_data_i),
         .s6_we_o(s6_we_o),
         .s6_ready_i(1'b1),
-
+        .s6_req_o(),
 
         // slave 7 interface
         .s7_addr_o(s7_addr_o),

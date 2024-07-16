@@ -10,15 +10,15 @@ module tinyriscv_soc_tb;
     reg chip_sel;
     always #10 clk = ~clk;     // 50MHz
 
-    wire[`RegBus] x3 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[3] : ~u_tinyriscv_2023211063.u_regs_2023211063.regs[3];
-    wire[`RegBus] x26 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[26] : ~u_tinyriscv_2023211063.u_regs_2023211063.regs[26];
-    wire[`RegBus] x27 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[27] : ~u_tinyriscv_2023211063.u_regs_2023211063.regs[27];
+    wire[`RegBus] x3 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[3] : ~tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[3];
+    wire[`RegBus] x26 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[26] : ~tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[26];
+    wire[`RegBus] x27 = chip_sel ? tinyriscv_soc_top_0.u_tinyriscv.u_regs.regs[27] : ~tinyriscv_soc_top_0.u_tinyriscv_2023211063.u_regs_2023211063.regs[27];
 
     integer r;
 
     initial begin
         clk = 0;
-        chip_sel = CHIP_SEL;
+        chip_sel = `CHIP_SEL;
         rst = `RstEnable;
 
         $display("test running...");
