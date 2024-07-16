@@ -54,7 +54,6 @@ module tinyriscv_soc_top(
 
     // 按键消抖
     wire rst_nid;
-    wire uart_debug_pind;
 
     // master 0 interface
     wire[`MemAddrBus] m0_addr_i;
