@@ -430,7 +430,7 @@ module ex_yw
     end
 
 
-    div i_div (
+    div_yw i_div (
         .clk_i,
         .rst_ni,
         .valid_i   (div_valid),
