@@ -14,27 +14,33 @@
  limitations under the License.                                          
  */
 
-`include "defines.v"
+`include "../header/defines.vh"
 
 // 译码模块
 // 纯组合逻辑电路
-module id(
+module id_2023211063(
 
 	input wire rst,
 
     // from if_id
     input wire[`InstBus] inst_i,             // 指令内容
     input wire[`InstAddrBus] inst_addr_i,    // 指令地址
+    input wire prdt_taken_i,
 
     // from regs
-    input wire[`RegBus] reg1_rdata_i,        // 通用寄存器1输入数据
-    input wire[`RegBus] reg2_rdata_i,        // 通用寄存器2输入数据
+    input wire[`RegBus] rf_reg1_rdata_i,        // 通用寄存器1输入数据
+    input wire[`RegBus] rf_reg2_rdata_i,        // 通用寄存器2输入数据
 
     // from csr reg
     input wire[`RegBus] csr_rdata_i,         // CSR寄存器输入数据
 
     // from ex
     input wire ex_jump_flag_i,               // 跳转标志
+    input wire[`RegBus] ex_reg_wdata_i,
+
+    // from hazard ctrl
+    input wire fwd_reg1_i,
+    input wire fwd_reg2_i,
 
     // to regs
     output reg[`RegAddrBus] reg1_raddr_o,    // 读通用寄存器1地址
@@ -44,6 +50,7 @@ module id(
     output reg[`MemAddrBus] csr_raddr_o,     // 读CSR寄存器地址
 
     // to ex
+    output wire prdt_taken_o,
     output reg[`MemAddrBus] op1_o,
     output reg[`MemAddrBus] op2_o,
     output reg[`MemAddrBus] op1_jump_o,
@@ -59,6 +66,11 @@ module id(
     output reg[`MemAddrBus] csr_waddr_o      // 写CSR寄存器地址
 
     );
+    wire[`RegBus] reg1_rdata_i;        // 通用寄存器1输入数据
+    wire[`RegBus] reg2_rdata_i;        // 通用寄存器2输入数据
+
+    assign reg1_rdata_i = fwd_reg1_i ? ex_reg_wdata_i : rf_reg1_rdata_i;
+    assign reg2_rdata_i = fwd_reg2_i ? ex_reg_wdata_i : rf_reg2_rdata_i;
 
     wire[6:0] opcode = inst_i[6:0];
     wire[2:0] funct3 = inst_i[14:12];
@@ -67,6 +79,9 @@ module id(
     wire[4:0] rs1 = inst_i[19:15];
     wire[4:0] rs2 = inst_i[24:20];
 
+    wire[11:0] imm = inst_i[31:20];
+
+    assign prdt_taken_o = prdt_taken_i;
 
     always @ (*) begin
         inst_o = inst_i;
@@ -83,6 +98,46 @@ module id(
         op2_jump_o = `ZeroWord;
 
         case (opcode)
+            `INST_TYPE_EXT: begin
+                case (funct3)
+                    `INST_SID: begin
+                        reg_we_o = `WriteDisable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = `ZeroReg;
+                        op1_o = 32'h30000000;
+                        op2_o = `ZeroReg;
+                    end
+                    `INST_RT: begin
+                        reg_we_o = `WriteEnable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = `ZeroReg;
+                        op1_o = 32'h70030000;
+                        op2_o = `ZeroReg;
+                    end
+                    `INST_IF: begin
+                        reg_we_o = `WriteEnable;
+                        reg_waddr_o = rd;
+                        reg1_raddr_o = rs1;
+                        reg2_raddr_o = 5'd31;
+                        op1_o = reg1_rdata_i;
+                        if (imm == 12'b0) begin
+                            op2_o = reg2_rdata_i;
+                        end
+                        else begin
+                            op2_o = {{20{inst_i[31]}}, inst_i[31:20]};
+                        end
+                    end
+                    default: begin
+                        reg_we_o = `WriteDisable;
+                        reg_waddr_o = `ZeroReg;
+                        reg1_raddr_o = `ZeroReg;
+                        reg2_raddr_o = `ZeroReg;
+                    end
+                endcase
+
+            end
             `INST_TYPE_I: begin
                 case (funct3)
                     `INST_ADDI, `INST_SLTI, `INST_SLTIU, `INST_XORI, `INST_ORI, `INST_ANDI, `INST_SLLI, `INST_SRI: begin
@@ -199,7 +254,7 @@ module id(
                         op1_o = reg1_rdata_i;
                         op2_o = reg2_rdata_i;
                         op1_jump_o = inst_addr_i;
-                        op2_jump_o = {{20{inst_i[31]}}, inst_i[7], inst_i[30:25], inst_i[11:8], 1'b0};
+                        op2_jump_o = inst_i[31] ? 32'h4 : {{20{inst_i[31]}}, inst_i[7], inst_i[30:25], inst_i[11:8], 1'b0};
                     end
                     default: begin
                         reg1_raddr_o = `ZeroReg;
@@ -216,8 +271,8 @@ module id(
                 reg2_raddr_o = `ZeroReg;
                 op1_o = inst_addr_i;
                 op2_o = 32'h4;
-                op1_jump_o = inst_addr_i;
-                op2_jump_o = {{12{inst_i[31]}}, inst_i[19:12], inst_i[20], inst_i[30:21], 1'b0};
+                op1_jump_o = `ZeroWord;
+                op2_jump_o = `ZeroWord;
             end
             `INST_JALR: begin
                 reg_we_o = `WriteEnable;

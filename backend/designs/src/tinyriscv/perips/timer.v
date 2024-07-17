@@ -14,7 +14,7 @@
  limitations under the License.                                          
  */
 
-`include "../core/defines.v"
+`include "../header/defines.vh"
 
 
 // 32 bits count up timer module

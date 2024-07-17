@@ -14,12 +14,13 @@
  limitations under the License.                                          
  */
 
-`include "defines.v"
+`include "../header/defines.vh"
 
 // 执行模块
 // 纯组合逻辑电路
-module ex(
+module ex_2023211063(
 
+    input wire clk,
     input wire rst,
 
     // from id
@@ -38,6 +39,7 @@ module ex(
     input wire[`MemAddrBus] op2_i,
     input wire[`MemAddrBus] op1_jump_i,
     input wire[`MemAddrBus] op2_jump_i,
+    input wire prdt_taken_i,
 
     // from mem
     input wire[`MemBus] mem_rdata_i,        // 内存输入数据
@@ -54,8 +56,9 @@ module ex(
     output reg[`MemAddrBus] mem_waddr_o,    // 写内存地址
     output wire mem_we_o,                   // 是否要写内存
     output wire mem_req_o,                  // 请求访问内存标志
+    input  wire mem_ack_i,
 
-    // to regs
+    // to wb
     output wire[`RegBus] reg_wdata_o,       // 写寄存器数据
     output wire reg_we_o,                   // 是否要写通用寄存器
     output wire[`RegAddrBus] reg_waddr_o,   // 写通用寄存器地址
@@ -75,7 +78,10 @@ module ex(
     // to ctrl
     output wire hold_flag_o,                // 是否暂停标志
     output wire jump_flag_o,                // 是否跳转标志
-    output wire[`InstAddrBus] jump_addr_o   // 跳转目的地址
+    output wire[`InstAddrBus] jump_addr_o,  // 跳转目的地址
+
+    // to pipeline registers
+    output wire stall
 
     );
 
@@ -159,13 +165,24 @@ module ex(
     // 响应中断时不向总线请求访问内存
     assign mem_req_o = (int_assert_i == `INT_ASSERT)? `RIB_NREQ: mem_req;
 
-    assign hold_flag_o = hold_flag || div_hold_flag;
+    assign hold_flag_o = div_hold_flag;     // 冲刷流水线
+    assign stall = hold_flag;               // 暂停流水线
     assign jump_flag_o = jump_flag || div_jump_flag || ((int_assert_i == `INT_ASSERT)? `JumpEnable: `JumpDisable);
     assign jump_addr_o = (int_assert_i == `INT_ASSERT)? int_addr_i: (jump_addr | div_jump_addr);
 
     // 响应中断时不写CSR寄存器
     assign csr_we_o = (int_assert_i == `INT_ASSERT)? `WriteDisable: csr_we_i;
     assign csr_waddr_o = csr_waddr_i;
+
+    reg mem_ack_flag;
+    always @ (posedge clk) begin
+        if (rst == `RstEnable) begin
+            mem_ack_flag <= 0;
+        end else if(mem_req && mem_ack_i) begin
+            mem_ack_flag <= 1;
+        end else
+            mem_ack_flag <= 0;
+    end
 
 
     // 处理乘法指令
@@ -700,67 +717,64 @@ module ex(
                     end
                 endcase
             end
-            `INST_TYPE_B: begin
+            `INST_TYPE_EXT: begin
                 case (funct3)
-                    `INST_BEQ: begin
+                    `INST_SID: begin
+                        jump_flag = `JumpDisable;
                         hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
+                        jump_addr = `ZeroWord;
                         reg_wdata = `ZeroWord;
-                        jump_flag = op1_eq_op2 & `JumpEnable;
-                        jump_addr = {32{op1_eq_op2}} & op1_jump_add_op2_jump_res;
+                        mem_we = `WriteEnable;
+                        mem_req = `RIB_REQ;
+                        mem_waddr_o = op1_add_op2_res;
+                        mem_raddr_o = `ZeroWord;
+                        mem_wdata_o = 32'h00000005;
                     end
-                    `INST_BNE: begin
-                        hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
-                        reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_eq_op2) & `JumpEnable;
-                        jump_addr = {32{(~op1_eq_op2)}} & op1_jump_add_op2_jump_res;
+                    `INST_RT: begin
+                        if (mem_ack_flag) begin
+                            hold_flag = `HoldDisable;
+                            mem_req = `RIB_NREQ;
+                        end
+                        else begin
+                            jump_flag = `JumpDisable;
+                            hold_flag = `HoldEnable;
+                            jump_addr = `ZeroWord;
+                            reg_wdata = mem_rdata_i;
+                            mem_we = `WriteDisable;
+                            mem_req = `RIB_REQ;
+                            mem_waddr_o = `ZeroWord;
+                            mem_raddr_o = op1_add_op2_res;
+                            mem_wdata_o = `ZeroWord;
+                        end
                     end
-                    `INST_BLT: begin
+                    `INST_IF: begin
+                        jump_flag = `JumpDisable;
                         hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
-                        reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_ge_op2_signed) & `JumpEnable;
-                        jump_addr = {32{(~op1_ge_op2_signed)}} & op1_jump_add_op2_jump_res;
-                    end
-                    `INST_BGE: begin
-                        hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
-                        reg_wdata = `ZeroWord;
-                        jump_flag = (op1_ge_op2_signed) & `JumpEnable;
-                        jump_addr = {32{(op1_ge_op2_signed)}} & op1_jump_add_op2_jump_res;
-                    end
-                    `INST_BLTU: begin
-                        hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
-                        reg_wdata = `ZeroWord;
-                        jump_flag = (~op1_ge_op2_unsigned) & `JumpEnable;
-                        jump_addr = {32{(~op1_ge_op2_unsigned)}} & op1_jump_add_op2_jump_res;
-                    end
-                    `INST_BGEU: begin
-                        hold_flag = `HoldDisable;
-                        mem_wdata_o = `ZeroWord;
-                        mem_raddr_o = `ZeroWord;
-                        mem_waddr_o = `ZeroWord;
-                        mem_we = `WriteDisable;
-                        reg_wdata = `ZeroWord;
-                        jump_flag = (op1_ge_op2_unsigned) & `JumpEnable;
-                        jump_addr = {32{(op1_ge_op2_unsigned)}} & op1_jump_add_op2_jump_res;
+                        jump_addr = `ZeroWord;
+                        if (inst_i[31:20] == 12'b0) begin
+                            if (op1_ge_op2_signed) begin
+                                mem_wdata_o = {24'b0, op1_i[7:0]};
+                                mem_raddr_o = `ZeroWord;
+                                mem_waddr_o = 32'h3000000c;
+                                mem_req = `RIB_REQ;
+                                mem_we = `WriteEnable;
+                                reg_wdata = `ZeroWord;
+                            end
+                            else begin
+                                mem_wdata_o = `ZeroWord;
+                                mem_raddr_o = `ZeroWord;
+                                mem_waddr_o = `ZeroWord;
+                                mem_we = `WriteDisable;
+                                reg_wdata = op1_i;
+                            end
+                        end
+                        else begin
+                            mem_wdata_o = `ZeroWord;
+                            mem_raddr_o = `ZeroWord;
+                            mem_waddr_o = `ZeroWord;
+                            mem_we = `WriteDisable;
+                            reg_wdata = op1_add_op2_res;
+                        end
                     end
                     default: begin
                         jump_flag = `JumpDisable;
@@ -774,7 +788,91 @@ module ex(
                     end
                 endcase
             end
-            `INST_JAL, `INST_JALR: begin
+            `INST_TYPE_B: begin
+                case (funct3)
+                    `INST_BEQ: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = op1_eq_op2 ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    `INST_BNE: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = (~op1_eq_op2) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    `INST_BLT: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = (~op1_ge_op2_signed) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    `INST_BGE: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = (op1_ge_op2_signed) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    `INST_BLTU: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = (~op1_ge_op2_unsigned) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    `INST_BGEU: begin
+                        hold_flag = `HoldDisable;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                        jump_flag = (op1_ge_op2_unsigned) ^ prdt_taken_i;
+                        jump_addr = op1_jump_add_op2_jump_res;
+                    end
+                    default: begin
+                        jump_flag = `JumpDisable;
+                        hold_flag = `HoldDisable;
+                        jump_addr = `ZeroWord;
+                        mem_wdata_o = `ZeroWord;
+                        mem_raddr_o = `ZeroWord;
+                        mem_waddr_o = `ZeroWord;
+                        mem_we = `WriteDisable;
+                        reg_wdata = `ZeroWord;
+                    end
+                endcase
+            end
+            `INST_JAL: begin
+                hold_flag = `HoldDisable;
+                mem_wdata_o = `ZeroWord;
+                mem_raddr_o = `ZeroWord;
+                mem_waddr_o = `ZeroWord;
+                mem_we = `WriteDisable;
+                jump_flag = `JumpDisable;
+                jump_addr = op1_jump_add_op2_jump_res;
+                reg_wdata = op1_add_op2_res;
+            end
+            `INST_JALR: begin
                 hold_flag = `HoldDisable;
                 mem_wdata_o = `ZeroWord;
                 mem_raddr_o = `ZeroWord;

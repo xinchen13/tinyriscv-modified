@@ -146,7 +146,7 @@
 `define CSR_MSTATUS 12'h300
 `define CSR_MSCRATCH 12'h340
 
-`define RomNum 256  // rom depth(how many words)
+`define RomNum 256 // rom depth(how many words)    4096 ->  256
 
 `define MemNum 16  // memory depth(how many words)
 `define MemBus 31:0
@@ -162,3 +162,10 @@
 `define RegWidth 32
 `define RegNum 32        // reg num
 `define RegNumLog2 5
+
+
+// ext inst
+`define INST_TYPE_EXT 7'b0101111
+`define INST_SID 3'b000
+`define INST_RT 3'b001
+`define INST_IF 3'b010

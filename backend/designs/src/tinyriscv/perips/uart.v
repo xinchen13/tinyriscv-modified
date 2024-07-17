@@ -18,19 +18,22 @@
 // 串口模块(默认: 115200, 8 N 1)
 module uart(
 
+    // system interface
 	input wire clk,
 	input wire rst,
+    input wire baud_update_en,
+    input wire chip_sel,
 
+    // rib interface
     input wire we_i,
     input wire[31:0] addr_i,
     input wire[31:0] data_i,
-
     output reg[31:0] data_o,
+
+    // device interface
 	output wire tx_pin,
     input wire rx_pin
-
     );
-
 
     // 50MHz时钟，波特率115200bps对应的分频系数
     localparam BAUD_115200 = 32'h1B8;
@@ -70,6 +73,7 @@ module uart(
     // addr: 0x00
     // rw. bit[0]: tx enable, 1 = enable, 0 = disable
     // rw. bit[1]: rx enable, 1 = enable, 0 = disable
+    // sID bit[2]: send id, 1 = send, 0 = normal mode
     reg[31:0] uart_ctrl;
 
     // addr: 0x04
@@ -88,6 +92,34 @@ module uart(
 
     assign tx_pin = tx_reg;
 
+    // *************************************** uart baud capture
+    reg baud_update;
+    reg [1:0] baud_update_state;
+    reg [31:0] captured_baud_rate;
+
+    localparam BAUD_IDLE     = 2'd1;
+    localparam BAUD_START    = 2'd2;
+    localparam BAUD_STOP     = 2'd3;
+
+    // 上升沿检测(检测起始信号结束)
+    wire rx_posedge;
+    // ***************************************
+
+
+    // send ID: 0x32, 0x30, 0x32, 0x33, 0x32, 0x31, 0x31, 0x30, 0x36, 0x33
+    reg [7:0] id [0:9];
+    reg [3:0] id_state;
+    localparam ID_IDLE     = 4'd1;
+    localparam ID_SEND_1   = 4'd2;
+    localparam ID_SEND_2   = 4'd3;
+    localparam ID_SEND_3   = 4'd4;
+    localparam ID_SEND_4   = 4'd5;
+    localparam ID_SEND_5   = 4'd6;
+    localparam ID_SEND_6   = 4'd7;
+    localparam ID_SEND_7   = 4'd8;
+    localparam ID_SEND_8   = 4'd9;
+    localparam ID_SEND_9   = 4'd10;
+
 
     // 写寄存器
     always @ (posedge clk) begin
@@ -97,7 +129,10 @@ module uart(
             uart_rx <= 32'h0;
             uart_baud <= BAUD_115200;
             tx_data_valid <= 1'b0;
-        end else begin
+            tx_data <= 8'h0;
+            id_state <= ID_IDLE;
+        end 
+        else begin
             if (we_i == 1'b1) begin
                 case (addr_i[7:0])
                     UART_CTRL: begin
@@ -117,7 +152,103 @@ module uart(
                         end
                     end
                 endcase
-            end else begin
+            end 
+
+            else if ((uart_ctrl[2] == 1'b1) && (uart_ctrl[0] == 1'b1)) begin
+                if (id_state == ID_IDLE) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_1;
+                    end
+                end 
+                else if (id_state == ID_SEND_1) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h30;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_2;
+                    end
+                end
+                else if (id_state == ID_SEND_2) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_3;
+                    end
+                end
+                else if (id_state == ID_SEND_3) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h33;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_4;
+                    end
+                end
+                else if (id_state == ID_SEND_4) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h32;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_5;
+                    end
+                end
+                else if (id_state == ID_SEND_5) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h31;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_6;
+                    end
+                end
+                else if (id_state == ID_SEND_6) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h31;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_7;
+                    end
+                end
+                else if (id_state == ID_SEND_7) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h30;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_8;
+                    end
+                end
+                else if (id_state == ID_SEND_8) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= 8'h36;
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_SEND_9;
+                    end
+                end
+                else if (id_state == ID_SEND_9) begin
+                    if (uart_status[0] == 1'b0) begin
+                        tx_data <= chip_sel ? 8'h31 : 8'h33;
+                        // if (chip_sel == 1'b0) begin
+                        //     tx_data <= 8'h33;
+                        // end
+                        // else begin
+                        //     tx_data <= 8'h31;
+                        // end
+                        uart_status[0] <= 1'b1;
+                        tx_data_valid <= 1'b1;
+                        id_state <= ID_IDLE;
+                        uart_ctrl <= 32'h0;
+                    end
+                end
+
+                if (tx_data_ready == 1'b1) begin
+                    uart_status[0] <= 1'b0;
+                end
+            end
+
+            else begin
                 tx_data_valid <= 1'b0;
                 if (tx_data_ready == 1'b1) begin
                     uart_status[0] <= 1'b0;
@@ -127,6 +258,9 @@ module uart(
                         uart_status[1] <= 1'b1;
                         uart_rx <= {24'h0, rx_data};
                     end
+                end
+                if (baud_update) begin
+                    uart_baud <= captured_baud_rate;
                 end
             end
         end
@@ -163,7 +297,7 @@ module uart(
         if (rst == 1'b0) begin
             state <= S_IDLE;
             cycle_cnt <= 16'd0;
-            tx_reg <= 1'b0;
+            tx_reg <= 1'b1;
             bit_cnt <= 4'd0;
             tx_data_ready <= 1'b0;
         end else begin
@@ -323,6 +457,52 @@ module uart(
                 rx_data <= 8'h0;
                 rx_over <= 1'b0;
             end
+        end
+    end
+
+    // ************** baud_rate 自适应更新 *********************
+    assign rx_posedge = ~rx_q1 && rx_q0;
+
+    always @ (posedge clk) begin
+        if (!rst) begin
+            baud_update <= 1'b0;
+            baud_update_state <= BAUD_IDLE;
+            captured_baud_rate <= 32'h0;
+        end
+        else begin
+            case (baud_update_state)
+            BAUD_IDLE: begin
+                baud_update <= 1'b0;
+                if (baud_update_en) begin
+                    baud_update_state <= BAUD_START;
+                end
+            end
+            BAUD_START: begin
+                if (baud_update_en) begin
+                    if (rx_negedge) begin
+                        captured_baud_rate <= 32'h0;
+                    end
+                    else if (rx_posedge) begin
+                        baud_update_state <= BAUD_STOP;
+                    end
+                    else captured_baud_rate <= captured_baud_rate + 1'b1;
+                end
+                else begin
+                    baud_update_state <= BAUD_IDLE;
+                end
+            end
+            BAUD_STOP: begin
+                if (baud_update_en) begin
+                    baud_update <= 1'b1;
+                end
+                baud_update_state <= BAUD_IDLE;
+            end
+            default begin
+                baud_update <= 1'b0;
+                baud_update_state <= BAUD_IDLE;
+                captured_baud_rate <= 32'h0;
+            end
+            endcase
         end
     end
 

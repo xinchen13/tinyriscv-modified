@@ -42,11 +42,11 @@ module full_handshake_rx #(
     localparam STATE_IDLE     = 2'b01;
     localparam STATE_DEASSERT = 2'b10;
 
+    reg[1:0] state;
+    reg[1:0] state_next;
 
     reg req_d;
     reg req;
-    reg[1:0] state;
-    reg[1:0] state_next;
 
     always @ (posedge clk or negedge rst_n) begin
         if (!rst_n) begin

@@ -46,11 +46,11 @@ module full_handshake_tx #(
     localparam STATE_ASSERT   = 3'b010;
     localparam STATE_DEASSERT = 3'b100;
 
+    reg[2:0] state;
+    reg[2:0] state_next;
 
     reg ack_d;
     reg ack;
-    reg[2:0] state;
-    reg[2:0] state_next;
 
     always @ (posedge clk or negedge rst_n) begin
         if (!rst_n) begin
