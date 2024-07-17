@@ -41,7 +41,10 @@ module tinyriscv_yw
     input jtag_halt_flag_i,  // jtag暂停标志
     input jtag_reset_flag_i, // jtag复位PC标志
 
-    input [INT_BUS - 1:0] int_i  // 中断信号
+    input [INT_BUS - 1:0] int_i,  // 中断信号
+
+    output logic over,
+    output logic succ
 
 );
 

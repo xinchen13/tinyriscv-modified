@@ -41,7 +41,10 @@ module tinyriscv_2023211063(
     input wire jtag_halt_flag_i,               // jtag暂停标志
     input wire jtag_reset_flag_i,              // jtag复位PC标志
 
-    input wire[`INT_BUS] int_i                 // 中断信号
+    input wire[`INT_BUS] int_i,                // 中断信号
+
+    output wire over,
+    output wire succ
 
     );
 
@@ -218,7 +221,10 @@ module tinyriscv_2023211063(
         .jtag_we_i(jtag_reg_we_i),
         .jtag_addr_i(jtag_reg_addr_i),
         .jtag_data_i(jtag_reg_data_i),
-        .jtag_data_o(jtag_reg_data_o)
+        .jtag_data_o(jtag_reg_data_o),
+
+        .over(over),
+        .succ(succ)
     );
 
     // csr_reg模块例化

@@ -45,8 +45,10 @@ module regs_2023211063(
     output reg[`RegBus] rdata2_o,         // 读寄存器2数据
 
     // to jtag
-    output reg[`RegBus] jtag_data_o       // 读寄存器数据
+    output reg[`RegBus] jtag_data_o,      // 读寄存器数据
 
+    output wire over,         // 测试是否完成信号
+    output wire succ          // 测试是否成功信号
     );
 
     reg[`RegBus] regs[0:`RegNum - 1];
@@ -95,5 +97,8 @@ module regs_2023211063(
             jtag_data_o = regs[jtag_addr_i];
         end
     end
+
+    assign	over = ~regs[26];
+	assign	succ = ~regs[27];
 
 endmodule
