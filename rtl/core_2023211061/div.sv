@@ -30,6 +30,7 @@ module div_yw
     logic       is_signed;
 
     assign is_signed = (op_i == INST_DIV) || (op_i == INST_REM);
+    assign temp_remainder = {remainder_reg[WIDTH-2:0], abs_dividend[WIDTH-1]};
 
     // State machine
     always_ff @(posedge clk_i) begin
@@ -64,7 +65,6 @@ module div_yw
             count          <= '0;
             quotient_reg   <= '0;
             remainder_reg  <= '0;
-            temp_remainder <= '0;
             abs_dividend   <= '0;
             abs_divisor    <= '0;
             dividend_neg   <= '0;
@@ -85,23 +85,22 @@ module div_yw
 
                     quotient_reg   <= '0;
                     remainder_reg  <= '0;
-                    temp_remainder <= '0;
                     result_neg     <= is_signed && (dividend_i[WIDTH-1] ^ divisor_i[WIDTH-1]);
                     ready_o        <= '0;
 
                     data_o         <= '0;
                 end
                 STATE_CALC: begin
-                    temp_remainder = {remainder_reg[WIDTH-2:0], abs_dividend[WIDTH-1]};
-                    abs_dividend   = abs_dividend << 1;
-                    if (temp_remainder >= abs_divisor) begin
-                        temp_remainder = temp_remainder - abs_divisor;
-                        quotient_reg   = {quotient_reg[WIDTH-2:0], 1'b1};
+                    if (temp_remainder >= (abs_dividend << 1)) begin
+                        remainder_reg <= temp_remainder - (abs_dividend << 1);
+                        quotient_reg   <= {quotient_reg[WIDTH-2:0], 1'b1};
                     end
                     else begin
-                        quotient_reg = {quotient_reg[WIDTH-2:0], 1'b0};
+                        remainder_reg <= temp_remainder;
+                        quotient_reg <= {quotient_reg[WIDTH-2:0], 1'b0};
                     end
-                    remainder_reg = temp_remainder;
+                    abs_dividend <= abs_dividend << 1;
+
                     count <= count - 1;
                 end
                 STATE_END: begin
