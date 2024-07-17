@@ -25,7 +25,7 @@ module ex_2023211063(
 
     // from id
     input wire[`InstBus] inst_i,            // 指令内容
-    input wire[`InstAddrBus] inst_addr_i,   // 指令地址
+    // input wire[`InstAddrBus] inst_addr_i,   // 指令地址
     input wire reg_we_i,                    // 是否写通用寄存器
     input wire[`RegAddrBus] reg_waddr_i,    // 写通用寄存器地址
     input wire[`RegBus] reg1_rdata_i,       // 通用寄存器1输入数据
