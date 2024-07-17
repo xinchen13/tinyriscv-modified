@@ -162,7 +162,7 @@ module tinyriscv_yw
     assign rib_ex_we_o    = ex_mem_we_o;
     assign ex_mem_ready_i = rib_ex_ready_i;
 
-    instr_fetch instr_f (
+    instr_fetch_yw instr_f (
         .clk_i,
         .rst_ni,
 
@@ -183,7 +183,7 @@ module tinyriscv_yw
     );
 
     // ctrl模块例化
-    ctrl u_ctrl (
+    ctrl_yw u_ctrl (
         .jump_flag_i      (ex_jump_flag_o),
         .jump_addr_i      (ex_jump_addr_o),
         .hold_flag_ex_i   (ex_hold_flag_o),
@@ -196,7 +196,7 @@ module tinyriscv_yw
     );
 
     // regs模块例化
-    regs u_regs (
+    regs_yw u_regs (
         .clk_i,
         .rst_ni,
         .we_i       (ex_reg_we_o),
@@ -216,7 +216,7 @@ module tinyriscv_yw
     );
 
     // csr_reg模块例化
-    csr_reg u_csr_reg (
+    csr_reg_yw u_csr_reg (
         .clk_i,
         .rst_ni,
         .we_i             (ex_csr_we_o),
@@ -236,7 +236,7 @@ module tinyriscv_yw
     );
 
     // if_id模块例化
-    if_id u_if_id (
+    if_id_yw u_if_id (
         .clk_i (clk_i),
         .rst_ni(rst_ni),
 
@@ -258,7 +258,7 @@ module tinyriscv_yw
     );
 
     // id模块例化
-    id u_id (
+    id_yw u_id (
         .inst_i        (if_inst_o),
         .inst_addr_i   (if_inst_addr_o),
         .reg1_rdata_i  (regs_rdata1_o),
@@ -282,7 +282,7 @@ module tinyriscv_yw
     );
 
     // id_ex模块例化
-    id_ex u_id_ex (
+    id_ex_yw u_id_ex (
         .clk_i,
         .rst_ni,
 
@@ -318,7 +318,7 @@ module tinyriscv_yw
     );
 
     // ex模块例化
-    ex u_ex (
+    ex_yw u_ex (
         .clk_i,
         .rst_ni,
 
@@ -359,7 +359,7 @@ module tinyriscv_yw
     );
 
     // clint模块例化
-    clint u_clint (
+    clint_yw u_clint (
         .clk_i          (clk_i),
         .rst_ni         (rst_ni),
         .int_flag_i     (if_int_flag_o),
