@@ -163,19 +163,13 @@ module tinyriscv_soc_top(
     // 低电平表示已经halt住CPU
     assign halted_ind = ~jtag_halt_req_o;
 
-    reg over_temp;
-    reg succ_temp;
-    assign over = over_temp;
-    assign succ = succ_temp;
-    always @ (posedge clk) begin
-        if (rst == `RstEnable) begin
-            over_temp <= 1'b1;
-            succ_temp <= 1'b1;
-        end else begin
-            over_temp <= chip_sel ? ~u_tinyriscv.u_regs.regs[26] : ~u_tinyriscv_2023211063.u_regs_2023211063.regs[26];  // when = 1, run over
-            succ_temp <= chip_sel ? ~u_tinyriscv.u_regs.regs[27] : ~u_tinyriscv_2023211063.u_regs_2023211063.regs[27];  // when = 1, run succ, otherwise fail
-        end
-    end
+    // 拉出寄存器
+    wire over_2023211063;
+    wire succ_2023211063;
+    wire over_yw;
+    wire succ_yw;
+    assign over = chip_sel ? over_yw : over_2023211063;
+    assign succ = chip_sel ? succ_yw : succ_2023211063;
 
     wire [`MemAddrBus] m0_addr_i_2023211063;
     wire [`MemBus] m0_data_i_2023211063;
@@ -219,7 +213,10 @@ module tinyriscv_soc_top(
         .jtag_halt_flag_i(jtag_halt_req_o),
         .jtag_reset_flag_i(jtag_reset_req_o),
 
-        .int_i(int_flag)
+        .int_i(int_flag),
+
+        .over(over_2023211063),
+        .succ(succ_2023211063)
     );
 
     debounce u_debounce_rst (
@@ -252,7 +249,10 @@ module tinyriscv_soc_top(
         .jtag_halt_flag_i (jtag_halt_req_o),
         .jtag_reset_flag_i(jtag_reset_req_o),
 
-        .int_i(int_flag)
+        .int_i(int_flag),
+
+        .over(over_yw),
+        .succ(succ_yw)
     );
 
 
