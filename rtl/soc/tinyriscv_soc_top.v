@@ -168,8 +168,10 @@ module tinyriscv_soc_top(
     wire succ_2023211063;
     wire over_yw;
     wire succ_yw;
-    assign over = chip_sel ? over_yw : over_2023211063;
-    assign succ = chip_sel ? succ_yw : succ_2023211063;
+    assign over_temp = chip_sel ? over_yw : over_2023211063;
+    assign succ_temp = chip_sel ? succ_yw : succ_2023211063;
+    assign over = rst ? over_temp : 1'b1;
+    assign succ = rst ? succ_temp : 1'b1;
 
     wire [`MemAddrBus] m0_addr_i_2023211063;
     wire [`MemBus] m0_data_i_2023211063;
