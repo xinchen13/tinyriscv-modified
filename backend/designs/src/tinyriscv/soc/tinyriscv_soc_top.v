@@ -168,10 +168,20 @@ module tinyriscv_soc_top(
     wire succ_2023211063;
     wire over_yw;
     wire succ_yw;
-    assign over_temp = chip_sel ? over_yw : over_2023211063;
-    assign succ_temp = chip_sel ? succ_yw : succ_2023211063;
-    assign over = rst ? over_temp : 1'b1;
-    assign succ = rst ? succ_temp : 1'b1;
+    reg over_temp;
+    reg succ_temp;
+    always @ (posedge clk) begin
+        if (rst == `RstEnable) begin
+            over_temp <= 1'b1;
+            succ_temp <= 1'b1;
+        end
+        else begin
+            over_temp <= chip_sel ? over_yw : over_2023211063;
+            succ_temp <= chip_sel ? succ_yw : succ_2023211063;
+        end
+    end
+    assign over = over_temp;
+    assign succ = succ_temp;
 
     wire [`MemAddrBus] m0_addr_i_2023211063;
     wire [`MemBus] m0_data_i_2023211063;
