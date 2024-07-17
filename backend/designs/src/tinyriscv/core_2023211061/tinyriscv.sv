@@ -14,7 +14,7 @@
  limitations under the License.
  */
 // tinyriscv处理器核顶层模块
-module tinyriscv
+module tinyriscv_yw
     import tinyriscv_pkg::*;
 (
 
