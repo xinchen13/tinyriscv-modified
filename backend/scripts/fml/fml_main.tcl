@@ -17,14 +17,14 @@ set_svf $::env(RESULT_DIR)/syn/data/$::env(DESIGN_NAME).svf
 # Reference design
 #-----------------------------------------------------------------------
 foreach file $::env(VERILOG_FILES) {
-  read_verilog -r $file
+  read_sverilog -r $file
 }
 set_top r:WORK/$::env(DESIGN_NAME)
 
 #-----------------------------------------------------------------------
 # Implement design
 #-----------------------------------------------------------------------
-read_verilog -i $::env(RESULT_DIR)/syn/data/$::env(DESIGN_NAME).syn.v
+read_sverilog -i $::env(RESULT_DIR)/syn/data/$::env(DESIGN_NAME).syn.v
 set_top i:WORK/$::env(DESIGN_NAME)
 
 #-----------------------------------------------------------------------
