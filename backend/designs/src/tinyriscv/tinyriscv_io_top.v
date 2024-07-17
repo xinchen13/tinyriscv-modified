@@ -15,7 +15,7 @@ module tinyriscv_io_top (
     input wire uart_rx_pin,  // UART接收引脚
 
     inout wire[15:0] gpio,    // GPIO引脚
-    output wire [3:0] pwm_o,        // pwm 输出
+    output wire [3:0] pwm,        // pwm 输出
 
     output wire io_scl,
     inout wire io_sda,
@@ -41,6 +41,10 @@ module tinyriscv_io_top (
 	wire	[31:0]	gpio_io_ctrl;
 	reg		OEN_inout, IE_inout, DS_inout;
 
+    wire    [3:0] pwm_core;
+    wire    baud_update_en_core;
+    wire    io_scl_core;
+
 // Input Ports	
 PDDW0204CDG 	mclk		(.OEN(1'b1),.I(1'b0),.PAD(clk),				.C(clk_core),				.DS(1'b0),.PE(1'b0),.IE(1'b1));
 PDDW0204CDG 	mrst		(.OEN(1'b1),.I(1'b0),.PAD(rst),				.C(rst_core),				.DS(1'b0),.PE(1'b0),.IE(1'b1));
@@ -51,6 +55,7 @@ PDDW0204CDG 	mjtag_TMS	(.OEN(1'b1),.I(1'b0),.PAD(jtag_TMS),		.C(jtag_TMS_core),	
 PDDW0204CDG 	mjtag_TDI	(.OEN(1'b1),.I(1'b0),.PAD(jtag_TDI),		.C(jtag_TDI_core),			.DS(1'b0),.PE(1'b0),.IE(1'b1));
 PDDW0204CDG 	mspi_miso	(.OEN(1'b1),.I(1'b0),.PAD(spi_miso),		.C(spi_miso_core),			.DS(1'b0),.PE(1'b0),.IE(1'b1));
 PDDW0204CDG 	mchip_sel	(.OEN(1'b1),.I(1'b0),.PAD(chip_sel),		.C(chip_sel_core),			.DS(1'b0),.PE(1'b0),.IE(1'b1));
+PDDW0204CDG 	mbaud_update_en	(.OEN(1'b1),.I(1'b0),.PAD(baud_update_en),		.C(baud_update_en_core),			.DS(1'b0),.PE(1'b0),.IE(1'b1));
 
 // Output Ports	
 PDDW0204CDG 	mover		(.OEN(1'b0),.I(over_core),			.PAD(over),			.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
@@ -61,7 +66,11 @@ PDDW0204CDG 	mjtag_TDO	(.OEN(1'b0),.I(jtag_TDO_core),		.PAD(jtag_TDO),		.C(),.DS
 PDDW0204CDG 	mspi_mosi	(.OEN(1'b0),.I(spi_mosi_core),		.PAD(spi_mosi),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
 PDDW0204CDG 	mspi_ss		(.OEN(1'b0),.I(spi_ss_core),		.PAD(spi_ss),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
 PDDW0204CDG 	mspi_clk	(.OEN(1'b0),.I(spi_clk_core),		.PAD(spi_clk),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
-
+PDDW0204CDG 	mpwm0	    (.OEN(1'b0),.I(pwm_core[0]),		.PAD(pwm[0]),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
+PDDW0204CDG 	mpwm1	    (.OEN(1'b0),.I(pwm_core[1]),		.PAD(pwm[1]),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
+PDDW0204CDG 	mpwm2	    (.OEN(1'b0),.I(pwm_core[2]),		.PAD(pwm[2]),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
+PDDW0204CDG 	mpwm3	    (.OEN(1'b0),.I(pwm_core[3]),		.PAD(pwm[3]),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
+PDDW0204CDG 	mscl	    (.OEN(1'b0),.I(io_scl_core),		.PAD(io_scl),		.C(),.DS(1'b1),.PE(1'b0),.IE(1'b0));
 // InOut Ports	
 	always@ (*) begin
 	case(gpio_io_ctrl)
@@ -118,6 +127,7 @@ tinyriscv_soc_top		tinyriscv(
 
     .uart_tx_pin(uart_tx_pin_core), // UART发送引脚
     .uart_rx_pin(uart_rx_pin_core),  // UART接收引脚
+
     .gpio_io_ctrl(gpio_io_ctrl),    // GPIO引脚控制，每2位控制1个IO的模式，0: 高阻，1：输出，2：输入
     .gpio_out(gpio_out_core),    // GPIO引脚输出数据
     .gpio_in(gpio_in_core),    // GPIO引脚输入数据
@@ -132,7 +142,14 @@ tinyriscv_soc_top		tinyriscv(
     .spi_ss(spi_ss_core),      // SPI SS引脚
     .spi_clk(spi_clk_core),      // SPI CLK引脚
     
-	.chip_sel(chip_sel_core)
+	.chip_sel(chip_sel_core),
+
+    .pwm_o(pwm_core),
+    .baud_update_en(baud_update_en_core),
+    .io_scl(io_scl_core),
+    .io_sda_in(io_sda_in_core),
+    .io_sda_out(io_sda_out_core),
+    .io_sda_ctrl(io_sda_ctrl_core)
 );
 
 endmodule

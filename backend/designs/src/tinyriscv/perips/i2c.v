@@ -19,7 +19,10 @@ module i2c(
 
     // device interface
     output wire scl,
-    inout wire sda
+    // inout wire sda
+    input wire sda_in,
+    output wire sda_out,
+    output wire sda_ctrl
 );
 
     // regs
@@ -100,7 +103,9 @@ module i2c(
 
     assign scl = (cstate == IDLE || cstate == STOP) ? 1'b1 : scl_r;
 
-    assign sda = sda_link ? sda_r:1'bz;
+    // assign sda = sda_link ? sda_r:1'bz;
+    assign sda_ctrl = sda_link;
+    assign sda_out = sda_r;
 
     always @ (posedge clk) begin
         if (!rst_n) begin
@@ -178,14 +183,14 @@ module i2c(
                     if (`SCL_HIG) begin
                         num <= num + 1'b1;    
                         case (num)
-                            4'd0: iic_read_data[15] <= sda;
-                            4'd1: iic_read_data[14] <= sda;  
-                            4'd2: iic_read_data[13] <= sda; 
-                            4'd3: iic_read_data[12] <= sda; 
-                            4'd4: iic_read_data[11] <= sda; 
-                            4'd5: iic_read_data[10] <= sda; 
-                            4'd6: iic_read_data[9]  <= sda; 
-                            4'd7: iic_read_data[8]  <= sda; 
+                            4'd0: iic_read_data[15] <= sda_in;
+                            4'd1: iic_read_data[14] <= sda_in;  
+                            4'd2: iic_read_data[13] <= sda_in; 
+                            4'd3: iic_read_data[12] <= sda_in; 
+                            4'd4: iic_read_data[11] <= sda_in; 
+                            4'd5: iic_read_data[10] <= sda_in; 
+                            4'd6: iic_read_data[9]  <= sda_in; 
+                            4'd7: iic_read_data[8]  <= sda_in; 
                             default: ;
                         endcase                                                          
                     end
@@ -216,14 +221,14 @@ module i2c(
                     if (`SCL_HIG) begin    
                         num <= num + 1'b1;    
                         case (num)
-                            4'd0: iic_read_data[7] <= sda;
-                            4'd1: iic_read_data[6] <= sda;  
-                            4'd2: iic_read_data[5] <= sda; 
-                            4'd3: iic_read_data[4] <= sda; 
-                            4'd4: iic_read_data[3] <= sda; 
-                            4'd5: iic_read_data[2] <= sda; 
-                            4'd6: iic_read_data[1] <= sda; 
-                            4'd7: iic_read_data[0] <= sda; 
+                            4'd0: iic_read_data[7] <= sda_in;
+                            4'd1: iic_read_data[6] <= sda_in;  
+                            4'd2: iic_read_data[5] <= sda_in; 
+                            4'd3: iic_read_data[4] <= sda_in; 
+                            4'd4: iic_read_data[3] <= sda_in; 
+                            4'd5: iic_read_data[2] <= sda_in; 
+                            4'd6: iic_read_data[1] <= sda_in; 
+                            4'd7: iic_read_data[0] <= sda_in; 
                             default: ;
                         endcase                                                                     
                     end

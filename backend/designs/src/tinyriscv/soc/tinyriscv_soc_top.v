@@ -35,11 +35,18 @@ module tinyriscv_soc_top(
     output wire uart_tx_pin, // UART发送引脚
     input wire uart_rx_pin,  // UART接收引脚
 
-    inout wire[15:0] gpio,          // GPIO引脚
+    // inout wire[15:0] gpio,          // GPIO引脚
+    output wire [31:0] gpio_ctrl,
+    output wire [15:0] gpio_out,
+    input wire [15:0] gpio_in,
+
     output wire [3:0] pwm_o,        // pwm 输出
 
     output wire io_scl,
-    inout wire io_sda,
+    // inout wire io_sda,
+    input wire io_sda_in,
+    output wire io_sda_out,
+    output wire io_sda_ctrl, 
 
     input wire jtag_TCK,     // JTAG TCK引脚
     input wire jtag_TMS,     // JTAG TMS引脚
@@ -153,9 +160,10 @@ module tinyriscv_soc_top(
     wire timer0_int;
 
     // gpio
-    wire[15:0] io_in;
-    wire[31:0] gpio_ctrl;
-    wire[31:0] gpio_data;
+    // wire[15:0] io_in;
+    // wire[31:0] gpio_ctrl;
+    // wire[31:0] gpio_data;
+
 
     assign int_flag = {7'h0, timer0_int};
 
@@ -313,41 +321,41 @@ module tinyriscv_soc_top(
         .rx_pin(uart_rx_pin)
     );
 
-    // io0
-    assign gpio[0] = (gpio_ctrl[1:0] == 2'b01)? gpio_data[0]: 1'bz;
-    assign io_in[0] = gpio[0];
-    // io1
-    assign gpio[1] = (gpio_ctrl[3:2] == 2'b01)? gpio_data[1]: 1'bz;
-    assign io_in[1] = gpio[1];
-    // io2~15
-    assign gpio[2] = (gpio_ctrl[5:4] == 2'b01)? gpio_data[2]: 1'bz;
-    assign io_in[2] = gpio[2];
-    assign gpio[3] = (gpio_ctrl[7:6] == 2'b01)? gpio_data[3]: 1'bz;
-    assign io_in[3] = gpio[3];
-    assign gpio[4] = (gpio_ctrl[9:8] == 2'b01)? gpio_data[4]: 1'bz;
-    assign io_in[4] = gpio[4];
-    assign gpio[5] = (gpio_ctrl[11:10] == 2'b01)? gpio_data[5]: 1'bz;
-    assign io_in[5] = gpio[5];
-    assign gpio[6] = (gpio_ctrl[13:12] == 2'b01)? gpio_data[6]: 1'bz;
-    assign io_in[6] = gpio[6];
-    assign gpio[7] = (gpio_ctrl[15:14] == 2'b01)? gpio_data[7]: 1'bz;
-    assign io_in[7] = gpio[7];
-    assign gpio[8] = (gpio_ctrl[17:16] == 2'b01)? gpio_data[8]: 1'bz;
-    assign io_in[8] = gpio[8];
-    assign gpio[9] = (gpio_ctrl[19:18] == 2'b01)? gpio_data[9]: 1'bz;
-    assign io_in[9] = gpio[9];
-    assign gpio[10] = (gpio_ctrl[21:20] == 2'b01)? gpio_data[10]: 1'bz;
-    assign io_in[10] = gpio[10];
-    assign gpio[11] = (gpio_ctrl[23:22] == 2'b01)? gpio_data[11]: 1'bz;
-    assign io_in[11] = gpio[11];
-    assign gpio[12] = (gpio_ctrl[25:24] == 2'b01)? gpio_data[12]: 1'bz;
-    assign io_in[12] = gpio[12];
-    assign gpio[13] = (gpio_ctrl[27:26] == 2'b01)? gpio_data[13]: 1'bz;
-    assign io_in[13] = gpio[13];
-    assign gpio[14] = (gpio_ctrl[29:28] == 2'b01)? gpio_data[14]: 1'bz;
-    assign io_in[14] = gpio[14];
-    assign gpio[15] = (gpio_ctrl[31:30] == 2'b01)? gpio_data[15]: 1'bz;
-    assign io_in[15] = gpio[15];
+    // // io0
+    // assign gpio[0] = (gpio_ctrl[1:0] == 2'b01)? gpio_data[0]: 1'bz;
+    // assign io_in[0] = gpio[0];
+    // // io1
+    // assign gpio[1] = (gpio_ctrl[3:2] == 2'b01)? gpio_data[1]: 1'bz;
+    // assign io_in[1] = gpio[1];
+    // // io2~15
+    // assign gpio[2] = (gpio_ctrl[5:4] == 2'b01)? gpio_data[2]: 1'bz;
+    // assign io_in[2] = gpio[2];
+    // assign gpio[3] = (gpio_ctrl[7:6] == 2'b01)? gpio_data[3]: 1'bz;
+    // assign io_in[3] = gpio[3];
+    // assign gpio[4] = (gpio_ctrl[9:8] == 2'b01)? gpio_data[4]: 1'bz;
+    // assign io_in[4] = gpio[4];
+    // assign gpio[5] = (gpio_ctrl[11:10] == 2'b01)? gpio_data[5]: 1'bz;
+    // assign io_in[5] = gpio[5];
+    // assign gpio[6] = (gpio_ctrl[13:12] == 2'b01)? gpio_data[6]: 1'bz;
+    // assign io_in[6] = gpio[6];
+    // assign gpio[7] = (gpio_ctrl[15:14] == 2'b01)? gpio_data[7]: 1'bz;
+    // assign io_in[7] = gpio[7];
+    // assign gpio[8] = (gpio_ctrl[17:16] == 2'b01)? gpio_data[8]: 1'bz;
+    // assign io_in[8] = gpio[8];
+    // assign gpio[9] = (gpio_ctrl[19:18] == 2'b01)? gpio_data[9]: 1'bz;
+    // assign io_in[9] = gpio[9];
+    // assign gpio[10] = (gpio_ctrl[21:20] == 2'b01)? gpio_data[10]: 1'bz;
+    // assign io_in[10] = gpio[10];
+    // assign gpio[11] = (gpio_ctrl[23:22] == 2'b01)? gpio_data[11]: 1'bz;
+    // assign io_in[11] = gpio[11];
+    // assign gpio[12] = (gpio_ctrl[25:24] == 2'b01)? gpio_data[12]: 1'bz;
+    // assign io_in[12] = gpio[12];
+    // assign gpio[13] = (gpio_ctrl[27:26] == 2'b01)? gpio_data[13]: 1'bz;
+    // assign io_in[13] = gpio[13];
+    // assign gpio[14] = (gpio_ctrl[29:28] == 2'b01)? gpio_data[14]: 1'bz;
+    // assign io_in[14] = gpio[14];
+    // assign gpio[15] = (gpio_ctrl[31:30] == 2'b01)? gpio_data[15]: 1'bz;
+    // assign io_in[15] = gpio[15];
 
     // gpio模块例化
     gpio gpio_0(
@@ -357,9 +365,9 @@ module tinyriscv_soc_top(
         .addr_i(s4_addr_o),
         .data_i(s4_data_o),
         .data_o(s4_data_i),
-        .io_pin_i(io_in),
+        .io_pin_i(gpio_in),
         .reg_ctrl(gpio_ctrl),
-        .reg_data(gpio_data)
+        .reg_data(gpio_out)
     );
 
     // spi模块例化
@@ -396,7 +404,9 @@ module tinyriscv_soc_top(
         .we_i(s7_we_o),
         .data_o(s7_data_i),
         .scl(io_scl),
-        .sda(io_sda),
+        .sda_in(io_sda_in),
+        .sda_out(io_sda_out),
+        .sda_ctrl(io_sda_ctrl),
         .read_data_ready_o(s7_ack_i),
         .req_i(s7_req_o)
     );
