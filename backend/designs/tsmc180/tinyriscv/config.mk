@@ -1,5 +1,5 @@
 export DESIGN_NICKNAME = tinyriscv
-export DESIGN_NAME = tinyriscv_soc_top
+export DESIGN_NAME = tinyriscv_io_top
 export PLATFORM    = tsmc180
 
 export VERILOG_FILES = ./designs/src/$(DESIGN_NICKNAME)/header/tinyriscv_pkg.sv \
@@ -51,7 +51,8 @@ export VERILOG_FILES = ./designs/src/$(DESIGN_NICKNAME)/header/tinyriscv_pkg.sv 
                        ./designs/src/$(DESIGN_NICKNAME)/utils/debounce.sv \
                        ./designs/src/$(DESIGN_NICKNAME)/utils/gen_en_dff.sv \
                        ./designs/src/$(DESIGN_NICKNAME)/utils/fifo.sv \
-                       ./designs/src/$(DESIGN_NICKNAME)/soc/tinyriscv_soc_top.v
+                       ./designs/src/$(DESIGN_NICKNAME)/soc/tinyriscv_soc_top.v \
+                       ./designs/src/$(DESIGN_NICKNAME)/tinyriscv_io_top.v
 
 export PR_SDC_FILE      = ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint_for_pr.sdc
 export SDC_FILE      = ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
