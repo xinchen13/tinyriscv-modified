@@ -101,5 +101,4 @@ module regs_2023211063(
     assign	over = ~regs[26];
 	assign	succ = ~regs[27];
 
-
 endmodule

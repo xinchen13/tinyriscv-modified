@@ -45,10 +45,18 @@ module regs_yw
     output logic [RegBus - 1:0] rdata2_o,  // 读寄存器2数据
 
     // to jtag
-    output logic [RegBus - 1:0] jtag_data_o  // 读寄存器数据
+    output logic [RegBus - 1:0] jtag_data_o,  // 读寄存器数据
+
+    output succ,
+    output over
 );
     integer i;
     logic [RegBus - 1:0] regs[RegNum];
+
+    always_comb begin : judgesignal
+        succ = ~regs[27][0];
+        over = ~regs[26][0];
+    end : judgesignal
 
     // 写寄存器
     always_ff @(posedge clk_i) begin
