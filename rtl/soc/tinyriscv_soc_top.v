@@ -171,7 +171,7 @@ module tinyriscv_soc_top(
     reg over_temp;
     reg succ_temp;
     always @ (posedge clk) begin
-        if (rst = `RstEnable) begin
+        if (rst == `RstEnable) begin
             over_temp <= 1'b1;
             succ_temp <= 1'b1;
         end
