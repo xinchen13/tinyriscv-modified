@@ -47,8 +47,8 @@ module regs_yw
     // to jtag
     output logic [RegBus - 1:0] jtag_data_o,  // 读寄存器数据
 
-    output succ,
-    output over
+    output logic succ,
+    output logic over
 );
     integer i;
     logic [RegBus - 1:0] regs[RegNum];
