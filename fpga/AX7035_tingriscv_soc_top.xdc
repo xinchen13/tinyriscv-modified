@@ -102,3 +102,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports spi_clk]
 set_property PACKAGE_PIN C13 [get_ports spi_clk]
 
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets jtag_TCK_IBUF] 
+
+# CPU停住指示引脚
+set_property IOSTANDARD LVCMOS33 [get_ports halted_ind]
+set_property PACKAGE_PIN D15 [get_ports halted_ind]

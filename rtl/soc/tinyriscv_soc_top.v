@@ -45,6 +45,7 @@ module tinyriscv_soc_top(
     input wire jtag_TMS,     // JTAG TMS引脚
     input wire jtag_TDI,     // JTAG TDI引脚
     output wire jtag_TDO,    // JTAG TDO引脚
+    output wire halted_ind,
 
     input wire spi_miso,     // SPI MISO引脚
     output wire spi_mosi,    // SPI MOSI引脚
