@@ -52,6 +52,4 @@ report_failing_points > $::env(RESULT_DIR)/fml_syn/report/fail_points.rpt
 report_aborted_points > $::env(RESULT_DIR)/fml_syn/report/aborted.rpt
 save_session -replace $::env(RESULT_DIR)/fml_syn/data/rtl2syn.fss
 
-
-
-
+exit
