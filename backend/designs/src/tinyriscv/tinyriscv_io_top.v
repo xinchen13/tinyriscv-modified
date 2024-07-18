@@ -39,7 +39,7 @@ module tinyriscv_io_top (
 	wire	spi_miso_core, spi_mosi_core, spi_ss_core, spi_clk_core;
 	wire	[15:0]	gpio_out_core, gpio_in_core;
 	wire	[31:0]	gpio_io_ctrl;
-	reg		[15:0] OEN_inout, IE_inout, DS_inout;
+	reg	[15:0] OEN_inout, IE_inout, DS_inout;
 
         wire    [3:0] pwm_core;
         wire    chip_sel_core;

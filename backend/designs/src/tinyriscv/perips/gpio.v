@@ -29,7 +29,7 @@ module gpio(
 
     input wire[15:0] io_pin_i,       // 16x GPIO
     output wire[31:0] reg_ctrl,
-    output wire[31:0] reg_data
+    output wire[15:0] reg_data
     );
 
 
@@ -46,7 +46,7 @@ module gpio(
 
 
     assign reg_ctrl = gpio_ctrl;
-    assign reg_data = gpio_data;
+    assign reg_data = gpio_data[15:0];
 
 
     // 写寄存器
