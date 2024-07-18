@@ -58,7 +58,7 @@ module tinyriscv_soc_top(
     output wire spi_ss,      // SPI SS引脚
     output wire spi_clk,     // SPI CLK引脚
 
-    output wire halted_ind,  // jtag是否已经halt住CPU信号
+    output wire halted_ind   // jtag是否已经halt住CPU信号
     );
 
     // 按键消抖
