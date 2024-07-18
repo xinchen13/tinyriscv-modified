@@ -30,7 +30,7 @@ module tinyriscv_io_top (
     output wire spi_ss,      // SPI SS引脚
     output wire spi_clk,     // SPI CLK引脚
 	
-	input wire	chip_sel
+    input wire chip_sel
 );
 
 	wire	clk_core, rst_core, over_core, succ_core, halted_ind_core, uart_debug_pin_core;
@@ -41,11 +41,12 @@ module tinyriscv_io_top (
 	wire	[31:0]	gpio_io_ctrl;
 	reg		[15:0] OEN_inout, IE_inout, DS_inout;
 
-    wire    [3:0] pwm_core;
-    wire    baud_update_en_core;
-    wire    io_scl_core;
-    wire    io_sda_in_core, io_sda_out_core, io_sda_ctrl;
-    reg		i2c_OEN_inout, i2c_IE_inout, i2c_DS_inout;
+        wire    [3:0] pwm_core;
+        wire    chip_sel_core;
+        wire    baud_update_en_core;
+        wire    io_scl_core;
+        wire    io_sda_in_core, io_sda_out_core, io_sda_ctrl;
+        reg	i2c_OEN_inout, i2c_IE_inout, i2c_DS_inout;
 
 // Input Ports	
 PDDW0204CDG 	mclk		(.OEN(1'b1),.I(1'b0),.PAD(clk),				.C(clk_core),				.DS(1'b0),.PE(1'b0),.IE(1'b1));
@@ -488,7 +489,7 @@ tinyriscv_soc_top		tinyriscv(
     .spi_ss(spi_ss_core),      // SPI SS引脚
     .spi_clk(spi_clk_core),      // SPI CLK引脚
     
-	.chip_sel(chip_sel_core),
+    .chip_sel(chip_sel_core),
 
     .pwm_o(pwm_core),
     .baud_update_en(baud_update_en_core),
