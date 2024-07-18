@@ -77,7 +77,7 @@ addEndCap
 # save Design
 # -------------------------------------------------------------
 saveDesign $::env(RESULT_DIR)/pr/data/floor_plan.enc
-defOut -floorplan -noStdCells $::env(RESULT_DIR)/pr/data/ibex.floorplan.def
+defOut -floorplan -noStdCells $::env(RESULT_DIR)/pr/data/tinyriscv_io_top.floorplan.def
 
 set end [clock format [clock seconds] -format %Y%m%d_%I:%M_%p]
 puts "The FloorPlan End: $end"
