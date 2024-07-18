@@ -1,4 +1,4 @@
-current_design tinyriscv_soc_top
+current_design tinyriscv_io_top
 
 set clk_name  core_clock
 set clk_port_name clk
