@@ -474,7 +474,7 @@ tinyriscv_soc_top		tinyriscv(
     .uart_tx_pin(uart_tx_pin_core), // UART发送引脚
     .uart_rx_pin(uart_rx_pin_core),  // UART接收引脚
 
-    .gpio_io_ctrl(gpio_io_ctrl),    // GPIO引脚控制，每2位控制1个IO的模式，0: 高阻，1：输出，2：输入
+    .gpio_ctrl(gpio_io_ctrl),    // GPIO引脚控制，每2位控制1个IO的模式，0: 高阻，1：输出，2：输入
     .gpio_out(gpio_out_core),    // GPIO引脚输出数据
     .gpio_in(gpio_in_core),    // GPIO引脚输入数据
 
