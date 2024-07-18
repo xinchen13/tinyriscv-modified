@@ -143,7 +143,8 @@ clean:
 	rm -rf $(RESULT_DIR) default.svf
 
 run_all:
-	${MAKE} syn 
+	${MAKE} syn
+	${MAKE} fml_syn
 	${MAKE} data_init
 	${MAKE} floorplan
 	${MAKE} powerplan
