@@ -34,8 +34,8 @@ module ex_yw
     input [InstAddrBus - 1:0] int_addr_i,        // 中断跳转地址
     input [ MemAddrBus - 1:0] op1_i,
     input [ MemAddrBus - 1:0] op2_i,
-    input [              2:0] compare_i,
-    input [     RegBus - 1:0] store_data_i,
+    input [     RegBus - 1:0] reg1_rdata_i,
+    input [     RegBus - 1:0] reg2_rdata_i,
 
     // from mem
     input [MemBus - 1:0] mem_rdata_i,  // 内存输入数据
@@ -65,6 +65,7 @@ module ex_yw
 );
 
     logic [1:0] mem_addr_index;
+    logic [2:0] compare;
     logic [DoubleRegBus - 1:0] mul_temp;
     logic [DoubleRegBus - 1:0] mul_temp_invert;
     logic [31:0] sr_shift;
@@ -150,6 +151,14 @@ module ex_yw
         csr_waddr_o = csr_waddr_i;
     end
 
+    always_comb begin : compare_logic
+        compare[2] = (opcode == INST_TYPE_I && funct3 == INST_SLTI) ? $signed(reg1_rdata_i) >=
+            $signed({{20{inst_i[31]}}, inst_i[31:20]}) : $signed(reg1_rdata_i) >= $signed(reg2_rdata_i);
+        compare[1] = (opcode == INST_TYPE_I && funct3 == INST_SLTIU) ? reg1_rdata_i >= {{20{inst_i[31]}}, inst_i[31:20]} :
+            reg1_rdata_i >= reg2_rdata_i;
+        compare[0] = reg1_rdata_i == reg2_rdata_i;
+    end : compare_logic
+
     // 处理乘法指令
     always_comb begin
         if ((opcode == INST_TYPE_R_M) && (funct7 == 7'b0000001)) begin
@@ -225,7 +234,7 @@ module ex_yw
                 end
                 if (funct3 == INST_INFI_FUN3) begin
                     if (~|inst_i[31:20]) begin
-                        if (compare_i[1]) begin
+                        if (compare[1]) begin
                             reg_wdata   = '0;
                             mem_wdata_o = {24'b0, op1_i[7:0]};
                             mem_addr_o  = 32'h3000000c;
@@ -242,8 +251,8 @@ module ex_yw
             INST_TYPE_I: begin
                 case (funct3)
                     INST_ADDI:  reg_wdata = op1_add_op2_res;
-                    INST_SLTI:  reg_wdata = {32{(~compare_i[2])}} & 32'h1;
-                    INST_SLTIU: reg_wdata = {32{(~compare_i[1])}} & 32'h1;
+                    INST_SLTI:  reg_wdata = {32{(~compare[2])}} & 32'h1;
+                    INST_SLTIU: reg_wdata = {32{(~compare[1])}} & 32'h1;
                     INST_XORI:  reg_wdata = op1_i ^ op2_i;
                     INST_ORI:   reg_wdata = op1_i | op2_i;
                     INST_ANDI:  reg_wdata = op1_i & op2_i;
@@ -265,8 +274,8 @@ module ex_yw
                             else reg_wdata = op1_i - op2_i;
                         end
                         INST_SLL:  reg_wdata = op1_i << op2_i[4:0];
-                        INST_SLT:  reg_wdata = {32{(~compare_i[2])}} & 32'h1;
-                        INST_SLTU: reg_wdata = {32{(~compare_i[1])}} & 32'h1;
+                        INST_SLT:  reg_wdata = {32{(~compare[2])}} & 32'h1;
+                        INST_SLTU: reg_wdata = {32{(~compare[1])}} & 32'h1;
                         INST_XOR:  reg_wdata = op1_i ^ op2_i;
                         INST_SR: begin
                             if (inst_i[30] == 1'b1)
@@ -345,44 +354,44 @@ module ex_yw
                 case (funct3)
                     INST_SB: begin
                         case (mem_addr_index)
-                            2'b00:   mem_wdata_o = {mem_rdata_i[31:8], store_data_i[7:0]};
-                            2'b01:   mem_wdata_o = {mem_rdata_i[31:16], store_data_i[7:0], mem_rdata_i[7:0]};
-                            2'b10:   mem_wdata_o = {mem_rdata_i[31:24], store_data_i[7:0], mem_rdata_i[15:0]};
-                            default: mem_wdata_o = {store_data_i[7:0], mem_rdata_i[23:0]};
+                            2'b00:   mem_wdata_o = {mem_rdata_i[31:8], reg2_rdata_i[7:0]};
+                            2'b01:   mem_wdata_o = {mem_rdata_i[31:16], reg2_rdata_i[7:0], mem_rdata_i[7:0]};
+                            2'b10:   mem_wdata_o = {mem_rdata_i[31:24], reg2_rdata_i[7:0], mem_rdata_i[15:0]};
+                            default: mem_wdata_o = {reg2_rdata_i[7:0], mem_rdata_i[23:0]};
                         endcase
                     end
                     INST_SH: begin
-                        if (mem_addr_index == 2'b00) mem_wdata_o = {mem_rdata_i[31:16], store_data_i[15:0]};
-                        else mem_wdata_o = {store_data_i[15:0], mem_rdata_i[15:0]};
+                        if (mem_addr_index == 2'b00) mem_wdata_o = {mem_rdata_i[31:16], reg2_rdata_i[15:0]};
+                        else mem_wdata_o = {reg2_rdata_i[15:0], mem_rdata_i[15:0]};
                     end
-                    INST_SW: mem_wdata_o = store_data_i;
+                    INST_SW: mem_wdata_o = reg2_rdata_i;
                 endcase
             end
             INST_TYPE_B: begin
                 case (funct3)
                     INST_BEQ: begin
-                        jump_flag = compare_i[0];
-                        jump_addr = {32{compare_i[0]}} & op1_add_op2_res;
+                        jump_flag = compare[0];
+                        jump_addr = {32{compare[0]}} & op1_add_op2_res;
                     end
                     INST_BNE: begin
-                        jump_flag = (~compare_i[0]);
-                        jump_addr = {32{(~compare_i[0])}} & op1_add_op2_res;
+                        jump_flag = (~compare[0]);
+                        jump_addr = {32{(~compare[0])}} & op1_add_op2_res;
                     end
                     INST_BLT: begin
-                        jump_flag = (~compare_i[2]);
-                        jump_addr = {32{(~compare_i[2])}} & op1_add_op2_res;
+                        jump_flag = (~compare[2]);
+                        jump_addr = {32{(~compare[2])}} & op1_add_op2_res;
                     end
                     INST_BGE: begin
-                        jump_flag = (compare_i[2]);
-                        jump_addr = {32{(compare_i[2])}} & op1_add_op2_res;
+                        jump_flag = (compare[2]);
+                        jump_addr = {32{(compare[2])}} & op1_add_op2_res;
                     end
                     INST_BLTU: begin
-                        jump_flag = (~compare_i[1]);
-                        jump_addr = {32{(~compare_i[1])}} & op1_add_op2_res;
+                        jump_flag = (~compare[1]);
+                        jump_addr = {32{(~compare[1])}} & op1_add_op2_res;
                     end
                     INST_BGEU: begin
-                        jump_flag = (compare_i[1]);
-                        jump_addr = {32{(compare_i[1])}} & op1_add_op2_res;
+                        jump_flag = (compare[1]);
+                        jump_addr = {32{(compare[1])}} & op1_add_op2_res;
                     end
                 endcase
             end

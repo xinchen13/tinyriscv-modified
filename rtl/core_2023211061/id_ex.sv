@@ -35,13 +35,15 @@ module id_ex_yw
     input [     RegBus - 1:0] csr_rdata_i,       // CSR寄存器读数据
     input [ MemAddrBus - 1:0] op1_i,
     input [ MemAddrBus - 1:0] op2_i,
-    input [              2:0] compare_i,
-    input [     RegBus - 1:0] store_data_i,
+    input [     RegBus - 1:0] reg1_rdata_i,
+    input [     RegBus - 1:0] reg2_rdata_i,
 
     input [Hold_Flag_Bus - 1:0] hold_flag_i,  // 流水线暂停标志
 
     output logic [ MemAddrBus - 1:0] op1_o,
     output logic [ MemAddrBus - 1:0] op2_o,
+    output       [     RegBus - 1:0] reg1_rdata_o,
+    output       [     RegBus - 1:0] reg2_rdata_o,
     output logic [    InstBus - 1:0] inst_o,            // 指令内容
     output logic [InstAddrBus - 1:0] inst_addr_o,       // 指令地址
     output logic [InstAddrBus - 1:0] inst_addr_next_o,  // 指令地址
@@ -50,8 +52,6 @@ module id_ex_yw
     output logic                     csr_we_o,          // 写CSR寄存器标志
     output logic [ MemAddrBus - 1:0] csr_waddr_o,       // 写CSR寄存器地址
     output logic [     RegBus - 1:0] csr_rdata_o,       // CSR寄存器读数据
-    output logic [              2:0] compare_o,
-    output logic [     RegBus - 1:0] store_data_o,
 
     output logic ready_id_ex_o
 );
@@ -142,7 +142,7 @@ module id_ex_yw
     );
     assign csr_rdata_o = csr_rdata;
 
-    logic [MemAddrBus - 1:0] op1;
+    logic [RegBus - 1:0] op1;
     gen_en_dff #(32, 0) op1_ff (
         .clk_i,
         .rst_ni(~clear & rst_ni),
@@ -152,7 +152,7 @@ module id_ex_yw
     );
     assign op1_o = op1;
 
-    logic [MemAddrBus - 1:0] op2;
+    logic [RegBus - 1:0] op2;
     gen_en_dff #(32, 0) op2_ff (
         .clk_i,
         .rst_ni(~clear & rst_ni),
@@ -162,24 +162,24 @@ module id_ex_yw
     );
     assign op2_o = op2;
 
-    logic [2:0] compare;
-    gen_en_dff #(3, 0) compare_ff (
+    logic [RegBus - 1:0] reg1_rdata;
+    gen_en_dff #(32, 0) reg1_rdata_ff (
         .clk_i,
         .rst_ni(~clear & rst_ni),
         .en,
-        .din   (compare_i),
-        .qout  (compare)
+        .din   (reg1_rdata_i),
+        .qout  (reg1_rdata)
     );
-    assign compare_o = compare;
+    assign reg1_rdata_o = reg1_rdata;
 
-    logic [RegBus - 1:0] store_data;
-    gen_en_dff #(RegBus, 0) store_data_ff (
+    logic [RegBus - 1:0] reg2_rdata;
+    gen_en_dff #(32, 0) reg2_rdata_ff (
         .clk_i,
         .rst_ni(~clear & rst_ni),
         .en,
-        .din   (store_data_i),
-        .qout  (store_data)
+        .din   (reg2_rdata_i),
+        .qout  (reg2_rdata)
     );
-    assign store_data_o = store_data;
+    assign reg2_rdata_o = reg2_rdata;
 
 endmodule
