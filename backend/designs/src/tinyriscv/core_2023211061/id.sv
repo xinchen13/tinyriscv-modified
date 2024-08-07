@@ -51,7 +51,8 @@ module id_yw
     output logic [ RegAddrBus - 1:0] reg_waddr_o,   // 写通用寄存器地址
     output logic                     csr_we_o,      // 写CSR寄存器标志
     output logic [     RegBus - 1:0] csr_rdata_o,   // CSR寄存器数据
-    output logic [ MemAddrBus - 1:0] csr_waddr_o   // 写CSR寄存器地址
+    output logic [ MemAddrBus - 1:0] csr_waddr_o,   // 写CSR寄存器地址
+    output logic [     RegBus - 1:0] store_data_o
 
 );
 
@@ -84,6 +85,8 @@ module id_yw
         reg_waddr_o  = '0;
         reg1_raddr_o = '0;
         reg2_raddr_o = '0;
+
+        store_data_o = '0;
 
         case (opcode)
             INST_ID_OPCODE: begin
@@ -159,6 +162,7 @@ module id_yw
                         reg2_raddr_o = rs2;
                         op1_o        = reg1_rdata_i;
                         op2_o        = {{20{inst_i[31]}}, inst_i[31:25], inst_i[11:7]};
+                        store_data_o = reg2_rdata_i;
                     end
                 endcase
             end

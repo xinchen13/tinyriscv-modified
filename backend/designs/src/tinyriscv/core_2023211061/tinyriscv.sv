@@ -48,108 +48,105 @@ module tinyriscv_yw
     output over
 );
 
-    // pc_reg模块输出信号
-    wire [  InstAddrBus - 1:0] pc_real;
-    wire [  InstAddrBus - 1:0] pc_next_f2d;
-    wire [  InstAddrBus - 1:0] pc_next_d2e;
-    wire [  InstAddrBus - 1:0] pc_next_e;
 
-    wire [      InstBus - 1:0] if_instr;
-    wire                       instr_valid;
-    wire                       rib_pc_req;
+    // pc_reg模块输出信号
+    logic [  InstAddrBus - 1:0] pc_real;
+    logic pc_next_type_f2d;
+    logic pc_next_type_d2e;
+    logic pc_next_type_e;
+
+    logic [      InstBus - 1:0] if_instr;
+    logic                       instr_valid;
+    logic                       rib_pc_req;
 
     // if_id模块输出信号
-    wire [      InstBus - 1:0] if_inst_o;
-    wire [  InstAddrBus - 1:0] if_inst_addr_o;
-    wire [      INT_BUS - 1:0] if_int_flag_o;
-    wire                       valid_if_id;
+    logic [      InstBus - 1:0] if_inst_o;
+    logic [  InstAddrBus - 1:0] if_inst_addr_o;
+    logic [      INT_BUS - 1:0] if_int_flag_o;
+    logic                       valid_if_id;
 
     // id模块输出信号
-    wire [   RegAddrBus - 1:0] id_reg1_raddr_o;
-    wire [   RegAddrBus - 1:0] id_reg2_raddr_o;
-    wire [      InstBus - 1:0] id_inst_o;
-    wire [  InstAddrBus - 1:0] id_inst_addr_o;
-    wire [       RegBus - 1:0] id_reg1_rdata_o;
-    wire [       RegBus - 1:0] id_reg2_rdata_o;
-    wire                       id_reg_we_o;
-    wire [   RegAddrBus - 1:0] id_reg_waddr_o;
-    wire [   MemAddrBus - 1:0] id_csr_raddr_o;
-    wire                       id_csr_we_o;
-    wire [       RegBus - 1:0] id_csr_rdata_o;
-    wire [   MemAddrBus - 1:0] id_csr_waddr_o;
-    wire [   MemAddrBus - 1:0] id_op1_o;
-    wire [   MemAddrBus - 1:0] id_op2_o;
-    wire [   MemAddrBus - 1:0] id_op1_jump_o;
-    wire [   MemAddrBus - 1:0] id_op2_jump_o;
+    logic [   RegAddrBus - 1:0] id_reg1_raddr_o;
+    logic [   RegAddrBus - 1:0] id_reg2_raddr_o;
+    logic [      InstBus - 1:0] id_inst_o;
+    logic [  InstAddrBus - 1:0] id_inst_addr_o;
+    logic [       RegBus - 1:0] id_reg1_rdata_o;
+    logic [       RegBus - 1:0] id_reg2_rdata_o;
+    logic                       id_reg_we_o;
+    logic [   RegAddrBus - 1:0] id_reg_waddr_o;
+    logic [   MemAddrBus - 1:0] id_csr_raddr_o;
+    logic                       id_csr_we_o;
+    logic [       RegBus - 1:0] id_csr_rdata_o;
+    logic [   MemAddrBus - 1:0] id_csr_waddr_o;
+    logic [   MemAddrBus - 1:0] id_op1_o;
+    logic [   MemAddrBus - 1:0] id_op2_o;
+    logic [   MemAddrBus - 1:0] id_op1_jump_o;
+    logic [   MemAddrBus - 1:0] id_op2_jump_o;
 
     // id_ex模块输出信号
-    wire [      InstBus - 1:0] ie_inst_o;
-    wire [  InstAddrBus - 1:0] ie_inst_addr_o;
-    wire                       ie_reg_we_o;
-    wire [   RegAddrBus - 1:0] ie_reg_waddr_o;
-    wire [       RegBus - 1:0] ie_reg1_rdata_o;
-    wire [       RegBus - 1:0] ie_reg2_rdata_o;
-    wire                       ie_csr_we_o;
-    wire [   MemAddrBus - 1:0] ie_csr_waddr_o;
-    wire [       RegBus - 1:0] ie_csr_rdata_o;
-    wire [   MemAddrBus - 1:0] ie_op1_o;
-    wire [   MemAddrBus - 1:0] ie_op2_o;
-    wire [   MemAddrBus - 1:0] ie_op1_jump_o;
-    wire [   MemAddrBus - 1:0] ie_op2_jump_o;
-    wire                       ready_id_ex;
+    logic [      InstBus - 1:0] ie_inst_o;
+    logic [  InstAddrBus - 1:0] ie_inst_addr_o;
+    logic                       ie_reg_we_o;
+    logic [   RegAddrBus - 1:0] ie_reg_waddr_o;
+    logic [       RegBus - 1:0] ie_reg1_rdata_o;
+    logic [       RegBus - 1:0] ie_reg2_rdata_o;
+    logic                       ie_csr_we_o;
+    logic [   MemAddrBus - 1:0] ie_csr_waddr_o;
+    logic [       RegBus - 1:0] ie_csr_rdata_o;
+    logic [   MemAddrBus - 1:0] ie_op1_o;
+    logic [   MemAddrBus - 1:0] ie_op2_o;
+    logic [       RegBus - 1:0] store_data_i;
+    logic [       RegBus - 1:0] store_data_o;
+    logic                       ready_id_ex;
     // ex模块输出信号
-    wire [       MemBus - 1:0] ex_mem_wdata_o;
-    wire [   MemAddrBus - 1:0] ex_mem_addr_o;
-    wire                       ex_mem_we_o;
-    wire                       ex_mem_req_o;
-    wire                       ex_mem_ready_i;
-    wire [       RegBus - 1:0] ex_reg_wdata_o;
-    wire                       ex_reg_we_o;
-    wire [   RegAddrBus - 1:0] ex_reg_waddr_o;
-    wire                       ex_hold_flag_o;
-    wire                       ex_jump_flag_o;
-    wire [  InstAddrBus - 1:0] ex_jump_addr_o;
-    wire                       ex_div_start_o;
-    wire [       RegBus - 1:0] ex_div_dividend_o;
-    wire [       RegBus - 1:0] ex_div_divisor_o;
-    wire [                2:0] ex_div_op_o;
-    wire [   RegAddrBus - 1:0] ex_div_reg_waddr_o;
-    wire [       RegBus - 1:0] ex_csr_wdata_o;
-    wire                       ex_csr_we_o;
-    wire [   MemAddrBus - 1:0] ex_csr_waddr_o;
-    wire                       ex_ready;
+    logic [       MemBus - 1:0] ex_mem_wdata_o;
+    logic [   MemAddrBus - 1:0] ex_mem_addr_o;
+    logic                       ex_mem_we_o;
+    logic                       ex_mem_req_o;
+    logic                       ex_mem_ready_i;
+    logic [       RegBus - 1:0] ex_reg_wdata_o;
+    logic                       ex_reg_we_o;
+    logic [   RegAddrBus - 1:0] ex_reg_waddr_o;
+    logic                       ex_hold_flag_o;
+    logic                       ex_jump_flag_o;
+    logic [  InstAddrBus - 1:0] ex_jump_addr_o;
+    logic                       ex_div_start_o;
+    logic [       RegBus - 1:0] ex_csr_wdata_o;
+    logic                       ex_csr_we_o;
+    logic [   MemAddrBus - 1:0] ex_csr_waddr_o;
+    logic                       ex_ready;
 
     // regs模块输出信号
-    wire [       RegBus - 1:0] regs_rdata1_o;
-    wire [       RegBus - 1:0] regs_rdata2_o;
+    logic [       RegBus - 1:0] regs_rdata1_o;
+    logic [       RegBus - 1:0] regs_rdata2_o;
 
     // csr_reg模块输出信号
-    wire [       RegBus - 1:0] csr_data_o;
-    wire [       RegBus - 1:0] csr_clint_data_o;
-    wire                       csr_global_int_en_o;
-    wire [       RegBus - 1:0] csr_clint_csr_mtvec;
-    wire [       RegBus - 1:0] csr_clint_csr_mepc;
-    wire [       RegBus - 1:0] csr_clint_csr_mstatus;
+    logic [       RegBus - 1:0] csr_data_o;
+    logic [       RegBus - 1:0] csr_clint_data_o;
+    logic                       csr_global_int_en_o;
+    logic [       RegBus - 1:0] csr_clint_csr_mtvec;
+    logic [       RegBus - 1:0] csr_clint_csr_mepc;
+    logic [       RegBus - 1:0] csr_clint_csr_mstatus;
 
     // ctrl模块输出信号
-    wire [Hold_Flag_Bus - 1:0] ctrl_hold_flag_o;
-    wire                       ctrl_jump_flag_o;
-    wire [  InstAddrBus - 1:0] ctrl_jump_addr_o;
+    logic [Hold_Flag_Bus - 1:0] ctrl_hold_flag_o;
+    logic                       ctrl_jump_flag_o;
+    logic [  InstAddrBus - 1:0] ctrl_jump_addr_o;
 
     // div模块输出信号
-    wire [       RegBus - 1:0] div_result_o;
-    wire                       div_ready_o;
-    wire                       div_busy_o;
-    wire [   RegAddrBus - 1:0] div_reg_waddr_o;
+    logic [       RegBus - 1:0] div_result_o;
+    logic                       div_ready_o;
+    logic                       div_busy_o;
+    logic [   RegAddrBus - 1:0] div_reg_waddr_o;
 
     // clint模块输出信号
-    wire                       clint_we_o;
-    wire [   MemAddrBus - 1:0] clint_waddr_o;
-    wire [   MemAddrBus - 1:0] clint_raddr_o;
-    wire [       RegBus - 1:0] clint_data_o;
-    wire [  InstAddrBus - 1:0] clint_int_addr_o;
-    wire                       clint_int_assert_o;
-    wire                       clint_hold_flag_o;
+    logic                       clint_we_o;
+    logic [   MemAddrBus - 1:0] clint_waddr_o;
+    logic [   MemAddrBus - 1:0] clint_raddr_o;
+    logic [       RegBus - 1:0] clint_data_o;
+    logic [  InstAddrBus - 1:0] clint_int_addr_o;
+    logic                       clint_int_assert_o;
+    logic                       clint_hold_flag_o;
 
 
     assign rib_ex_addr_o  = ex_mem_addr_o;
@@ -158,7 +155,7 @@ module tinyriscv_yw
     assign rib_ex_we_o    = ex_mem_we_o;
     assign ex_mem_ready_i = rib_ex_ready_i;
 
-    instr_fetch_yw instr_f (
+    instr_fetch instr_f (
         .clk_i,
         .rst_ni,
 
@@ -173,9 +170,9 @@ module tinyriscv_yw
         .instr_o      (if_instr),
         .instr_valid_o(instr_valid),
 
-        .pc_o     (rib_pc_addr_o),  // PC指针
-        .pc_real  (pc_real),
-        .pc_next_o(pc_next_f2d)
+        .pc_o          (rib_pc_addr_o),    // PC指针
+        .pc_real       (pc_real),
+        .pc_next_type_o(pc_next_type_f2d)
     );
 
     // ctrl模块例化
@@ -242,15 +239,15 @@ module tinyriscv_yw
         .instr_ready_i   (instr_valid),
         .valid_to_id_ex_o(valid_if_id),
 
-        .inst_i          (if_instr),
-        .inst_addr_i     (pc_real),
-        .inst_addr_next_i(pc_next_f2d),
-        .inst_addr_next_o(pc_next_d2e),
-        .int_flag_i      (int_i),
-        .int_flag_o      (if_int_flag_o),
-        .hold_flag_i     (ctrl_hold_flag_o),
-        .inst_o          (if_inst_o),
-        .inst_addr_o     (if_inst_addr_o)
+        .inst_i               (if_instr),
+        .inst_addr_i          (pc_real),
+        .inst_addr_next_type_i(pc_next_type_f2d),
+        .inst_addr_next_type_o(pc_next_type_d2e),
+        .int_flag_i           (int_i),
+        .int_flag_o           (if_int_flag_o),
+        .hold_flag_i          (ctrl_hold_flag_o),
+        .inst_o               (if_inst_o),
+        .inst_addr_o          (if_inst_addr_o)
     );
 
     // id模块例化
@@ -274,7 +271,8 @@ module tinyriscv_yw
         .csr_rdata_o   (id_csr_rdata_o),
         .csr_waddr_o   (id_csr_waddr_o),
         .reg1_rdata_o  (id_reg1_rdata_o),
-        .reg2_rdata_o  (id_reg2_rdata_o)
+        .reg2_rdata_o  (id_reg2_rdata_o),
+        .store_data_o  (store_data_i)
     );
 
     // id_ex模块例化
@@ -286,31 +284,34 @@ module tinyriscv_yw
         .ready_ex_i   (ex_ready),
         .valid_if_id_i(valid_if_id),
 
-        .inst_i          (id_inst_o),
-        .inst_addr_i     (id_inst_addr_o),
-        .reg_we_i        (id_reg_we_o),
-        .reg_waddr_i     (id_reg_waddr_o),
-        .hold_flag_i     (ctrl_hold_flag_o),
-        .inst_addr_next_i(pc_next_d2e),
-        .inst_addr_next_o(pc_next_e),
-        .inst_o          (ie_inst_o),
-        .inst_addr_o     (ie_inst_addr_o),
-        .reg_we_o        (ie_reg_we_o),
-        .reg_waddr_o     (ie_reg_waddr_o),
-        .op1_i           (id_op1_o),
-        .op2_i           (id_op2_o),
-        .op1_o           (ie_op1_o),
-        .op2_o           (ie_op2_o),
-        .reg1_rdata_i    (id_reg1_rdata_o),
-        .reg2_rdata_i    (id_reg2_rdata_o),
-        .reg1_rdata_o    (ie_reg1_rdata_o),
-        .reg2_rdata_o    (ie_reg2_rdata_o),
-        .csr_we_i        (id_csr_we_o),
-        .csr_waddr_i     (id_csr_waddr_o),
-        .csr_rdata_i     (id_csr_rdata_o),
-        .csr_we_o        (ie_csr_we_o),
-        .csr_waddr_o     (ie_csr_waddr_o),
-        .csr_rdata_o     (ie_csr_rdata_o)
+        .inst_i               (id_inst_o),
+        .inst_addr_i          (id_inst_addr_o),
+        .reg_we_i             (id_reg_we_o),
+        .reg_waddr_i          (id_reg_waddr_o),
+        .hold_flag_i          (ctrl_hold_flag_o),
+        .inst_addr_next_type_i(pc_next_type_d2e),
+        .inst_addr_next_type_o(pc_next_type_e),
+        .inst_o               (ie_inst_o),
+        .inst_addr_o          (ie_inst_addr_o),
+        .reg_we_o             (ie_reg_we_o),
+        .reg_waddr_o          (ie_reg_waddr_o),
+        .op1_i                (id_op1_o),
+        .op2_i                (id_op2_o),
+        .op1_o                (ie_op1_o),
+        .op2_o                (ie_op2_o),
+        .reg1_rdata_i         (id_reg1_rdata_o),
+        .reg2_rdata_i         (id_reg2_rdata_o),
+        .reg1_rdata_o         (ie_reg1_rdata_o),
+        .reg2_rdata_o         (ie_reg2_rdata_o),
+        .csr_we_i             (id_csr_we_o),
+        .csr_waddr_i          (id_csr_waddr_o),
+        .csr_rdata_i          (id_csr_rdata_o),
+        .csr_we_o             (ie_csr_we_o),
+        .csr_waddr_o          (ie_csr_waddr_o),
+        .csr_rdata_o          (ie_csr_rdata_o),
+
+        .store_data_i,
+        .store_data_o
     );
 
     // ex模块例化
@@ -320,17 +321,17 @@ module tinyriscv_yw
 
         .ready_o(ex_ready),
 
-        .inst_i          (ie_inst_o),
-        .inst_addr_i     (ie_inst_addr_o),
-        .inst_addr_next_i(pc_next_e),
-        .reg_we_i        (ie_reg_we_o),
-        .reg_waddr_i     (ie_reg_waddr_o),
+        .inst_i               (ie_inst_o),
+        .inst_addr_i          (ie_inst_addr_o),
+        .inst_addr_next_type_i(pc_next_type_e),
+        .reg_we_i             (ie_reg_we_o),
+        .reg_waddr_i          (ie_reg_waddr_o),
 
         .op1_i(ie_op1_o),
         .op2_i(ie_op2_o),
 
-        .reg1_rdata_i    (ie_reg1_rdata_o),
-        .reg2_rdata_i    (ie_reg2_rdata_o),
+        .reg1_rdata_i(ie_reg1_rdata_o),
+        .reg2_rdata_i(ie_reg2_rdata_o),
 
         .mem_rdata_i(rib_ex_data_i),
         .mem_wdata_o(ex_mem_wdata_o),
@@ -352,7 +353,8 @@ module tinyriscv_yw
         .csr_rdata_i (ie_csr_rdata_o),
         .csr_wdata_o (ex_csr_wdata_o),
         .csr_we_o    (ex_csr_we_o),
-        .csr_waddr_o (ex_csr_waddr_o)
+        .csr_waddr_o (ex_csr_waddr_o),
+        .store_data_i(store_data_o)
     );
 
     // clint模块例化

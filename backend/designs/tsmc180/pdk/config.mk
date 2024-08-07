@@ -10,7 +10,7 @@ export LEF_FILES =  /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/SC_ARM/lef/tec
                     /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/Bonding_PAD/Back_End/lef/tpb018v_190a/wb/6lm/lef/tpb018v_6lm.lef \
                     /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/FILLCAP/lef/tsmc18_decap_6lm.lef \
                     /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/FILLCAP/lef/tsmc18_decap_6lm_antenna.lef
-					
+
 
 export DB_FILES = /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/SC_ARM/db/sage-x_tsmc_cl018g_rvt_tt_1p8v_25c.db \
 				  /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/IO/Front_End/timing_power_noise/NLDM/tpd018nv_280a/tpd018nvtc.db
@@ -69,11 +69,11 @@ export MAX_GLOBAL_ROUTE_LAYER = 4
 #  -------------------------------------------------------
 export CTS_BUF_CELL = CLKBUFX4
 export CTS_INV_CELL = CLKINVX1 CLKINVX2 CLKINVX4 CLKINVX8 CLKINVX12 CLKINVX16
-#Set the routing non-default rule which are used for clk tree routing 
+#Set the routing non-default rule which are used for clk tree routing
 export CTS_ROUTING_MUL = 2
 export NDR_CTS_MIN_LAYER = 2
 export NDR_CTS_MAX_LAYER = 4
-#Set the routing metal which are used for clk tree routing 
+#Set the routing metal which are used for clk tree routing
 export CTS_ROUTING_LAYER_RANGE = 6 2
 
 # ---------------------------------------------------------
@@ -85,7 +85,7 @@ export MAX_ROUTING_LAYER = 6
 # ---------------------------------------------------------
 #  Chip Finish
 # ---------------------------------------------------------
-#Set the layer text num for adding PG net text when running lvs 
+#Set the layer text num for adding PG net text when running lvs
 export LAYER_TEXT_NUM = 45
 export GDS_MAP_FILE = /data2/class/chenh/chenh62/TSMC18_Lib_new/streamOut.map
 export MAERGER_GDS_PATH = /data2/class/chenh/chenh62/TSMC18_Lib_new/merger_gds
@@ -101,5 +101,3 @@ export MAERGER_GDS_PATH = /data2/class/chenh/chenh62/TSMC18_Lib_new/merger_gds
 # ---------------------------------------------------------
 export STDCELL_SPICE = /data2/class/chenh/chenh62/TSMC18_Lib_new/lib/SC_ARM/cdl/sage-x_tsmc_cl018g_rvt.cdl
 export STDCELL_NETLIST =
-
-

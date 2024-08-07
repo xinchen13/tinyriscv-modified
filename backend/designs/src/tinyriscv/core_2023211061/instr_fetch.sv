@@ -1,4 +1,4 @@
-module instr_fetch_yw
+module instr_fetch
     import tinyriscv_pkg::*;
 (
     input clk_i,
@@ -18,15 +18,16 @@ module instr_fetch_yw
 
     output logic [InstBus - 1:0] instr_o,
 
-    output logic [InstAddrBus - 1:0] pc_o,      // PC指针
+    output logic [InstAddrBus - 1:0] pc_o,           // PC指针
     output logic [InstAddrBus - 1:0] pc_real,
-    output logic [InstAddrBus - 1:0] pc_next_o
+    output logic                     pc_next_type_o
 );
     logic handshake;
     logic jump_fetch_phase_on;
     logic low_compressed, high_compressed;
     logic [31:0] cdecoder_i;
     logic [15:0] instr_buffer;
+    logic [InstAddrBus - 1:0] pc_next;
 
     typedef enum logic [1:0] {
         ALIGNED            = 2'b00,
@@ -59,7 +60,7 @@ module instr_fetch_yw
             else if (jump_addr_i[1:0] == INIT_UNALIGNED) if_s_d = INIT_UNALIGNED;
         end
         else
-            unique case (if_s_q)
+            case (if_s_q)
                 ALIGNED: begin
                     if (low_compressed && high_compressed) if_s_d = UNALIGNED;
                     else if (low_compressed && ~high_compressed) if_s_d = UNALIGNED_CONTINUE;
@@ -85,14 +86,20 @@ module instr_fetch_yw
     end : compressed_judge
 
     always_comb begin : pc_next_ctrl
-        if (cdecoder_i[1:0] != 2'b11) pc_next_o = pc_real + 2;
-        else pc_next_o = pc_real + 4;
+        if (cdecoder_i[1:0] != 2'b11) begin
+            pc_next        = pc_real + 2;
+            pc_next_type_o = 1;
+        end
+        else begin
+            pc_next        = pc_real + 4;
+            pc_next_type_o = 0;
+        end
     end : pc_next_ctrl
 
     always_ff @(posedge clk_i) begin : pc_real_ctrl
         if (~rst_ni || jtag_reset_flag_i) pc_real <= '0;  // 复位
         else if (jump_flag_i) pc_real <= jump_addr_i;  // 跳转
-        else if (handshake) pc_real <= pc_next_o;  // 地址加
+        else if (handshake) pc_real <= pc_next;  // 地址加
         else pc_real <= pc_real;  // 暂停
     end : pc_real_ctrl
 

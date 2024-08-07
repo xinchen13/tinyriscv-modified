@@ -19,12 +19,12 @@ module if_id_yw
     import tinyriscv_pkg::*;
 (
 
-    input clk_i,
+    input clk_i ,
     input rst_ni,
 
     input [    InstBus - 1:0] inst_i,           // 指令内容
     input [InstAddrBus - 1:0] inst_addr_i,      // 指令地址
-    input [InstAddrBus - 1:0] inst_addr_next_i, // 下一指令地址
+    input inst_addr_next_type_i, // 下一指令地址
 
     input [Hold_Flag_Bus - 1:0] hold_flag_i,  // 流水线暂停标志
 
@@ -33,7 +33,7 @@ module if_id_yw
 
     output logic [    InstBus - 1:0] inst_o,           // 指令内容
     output logic [InstAddrBus - 1:0] inst_addr_o,      // 指令地址
-    output logic [InstAddrBus - 1:0] inst_addr_next_o, // 下一指令地址
+    output logic inst_addr_next_type_o, // 下一指令地址
 
     input        instr_ready_i,
     output logic instr_req_o,
@@ -53,7 +53,7 @@ module if_id_yw
 
     fifo_v3 #(
         .FALL_THROUGH(1'b1),
-        .DATA_WIDTH  (104),
+        .DATA_WIDTH  (73),
         .DEPTH       (1)
     ) if_id_fifo (
         .clk_i,
@@ -66,10 +66,10 @@ module if_id_yw
         .empty_o(empty),
         .usage_o(),
 
-        .data_i({inst_i, inst_addr_i, inst_addr_next_i, int_flag_i}),
+        .data_i({inst_i, inst_addr_i, inst_addr_next_type_i, int_flag_i}),
         .push_i(instr_req_o & instr_ready_i),
 
-        .data_o({inst_o, inst_addr_o, inst_addr_next_o, int_flag_o}),
+        .data_o({inst_o, inst_addr_o, inst_addr_next_type_o, int_flag_o}),
         .pop_i (ready_from_id_ex_i & valid_to_id_ex_o)
     );
 endmodule

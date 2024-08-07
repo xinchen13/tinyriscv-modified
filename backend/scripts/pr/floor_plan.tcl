@@ -6,7 +6,7 @@ source $::env(RESULT_DIR)/pr/data/init_design.enc
 # Define the block die area
 # -------------------------------------------------------------
 #floorPlan -site $::env(PLACE_SITE) -su 1 $::env(PLACE_DENSITY) 35 35 35 35
-floorPlan -site $::env(PLACE_SITE) -d {2400 1300 50 50 50 50}
+floorPlan -site $::env(PLACE_SITE) -d {2370 1270 50 50 50 50}
 
 # -------------------------------------------------------------
 # Place the block port

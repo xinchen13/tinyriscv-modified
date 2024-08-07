@@ -2,7 +2,7 @@ source $::env(RESULT_DIR)/pr/data/routing_opt.enc
 # -------------------------------------------------------------
 # Remove the unused net&module
 # -------------------------------------------------------------
-remove_assigns -buffering
+# remove_assigns -buffering -buffer CLKBUFX4
 deleteDanglingNet
 deleteEmptyModule
 
@@ -66,7 +66,3 @@ streamOut \
 
 saveDesign $::env(RESULT_DIR)/pr/data/chip_done.enc
 exit
-
-
-
-

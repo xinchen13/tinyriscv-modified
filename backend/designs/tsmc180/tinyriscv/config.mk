@@ -7,6 +7,7 @@ export VERILOG_FILES = ./designs/src/$(DESIGN_NICKNAME)/header/tinyriscv_pkg.sv 
                        ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/clint.sv \
                        ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/ctrl.sv \
                        ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/div.sv \
+                       ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/mult.sv \
                        ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/ex.sv \
 		               ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/instr_fetch.sv \
 	    	           ./designs/src/$(DESIGN_NICKNAME)/core_2023211061/compress.sv \
@@ -57,4 +58,3 @@ export VERILOG_FILES = ./designs/src/$(DESIGN_NICKNAME)/header/tinyriscv_pkg.sv 
 export PR_SDC_FILE      = ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint_for_pr.sdc
 export SDC_FILE      = ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/constraint.sdc
 export IO_FILE = ./designs/$(PLATFORM)/$(DESIGN_NICKNAME)/io.file
-
