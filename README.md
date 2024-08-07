@@ -1,7 +1,7 @@
 # tinyriscv-modified
 - 对 [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv) 进行修改, 添加了指令与外设, 调整核内流水
 - 在 FPGA (ALINX AX7035) 上进行功能验证
-- 进行综合、仿真、后端等工作, 得到 DRC 与 LVS clean 的 gds 文件
+- 在 tsmc 180nm 工艺下进行综合、仿真、后端等工作, 得到 DRC 与 LVS clean 的 gds 文件
 - 主要分支:
     - [master](https://github.com/xinchen13/tinyriscv-modified/tree/master): 对 tinyriscv 的修改, 具体内容见下
     - [pipeline](https://github.com/xinchen13/tinyriscv-modified/tree/pipeline): 修改内核为4级流水线, 添加了 write back 阶段
