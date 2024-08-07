@@ -1,8 +1,11 @@
 # tinyriscv-modified
-有效分支:
-- [master](https://github.com/xinchen13/tinyriscv-modified/tree/master): 对 tinyriscv 的修改, 具体内容见下
-- [pipeline](https://github.com/xinchen13/tinyriscv-modified/tree/pipeline): 修改内核为4级流水线, 添加了写回阶段
-- [to](https://github.com/xinchen13/tinyriscv-modified/tree/to): 用于流片的 SoC, 1套总线与外设集成了2颗内核, 通过 chip_sel 片选
+- 对 [liangkangnan/tinyriscv](https://gitee.com/liangkangnan/tinyriscv) 进行修改, 添加了指令与外设, 调整核内流水
+- 在 FPGA (ALINX AX7035) 上进行功能验证
+- 进行综合、仿真、后端等工作, 得到 DRC 与 LVS clean 的 gds 文件
+- 主要分支:
+    - [master](https://github.com/xinchen13/tinyriscv-modified/tree/master): 对 tinyriscv 的修改, 具体内容见下
+    - [pipeline](https://github.com/xinchen13/tinyriscv-modified/tree/pipeline): 修改内核为4级流水线, 添加了 write back 阶段
+    - [to](https://github.com/xinchen13/tinyriscv-modified/tree/to): 用于流片的 SoC, 1套总线与外设集成了2颗内核, 通过 chip_sel 片选, 通过 dc 综合得到网表, innovus 与 virtuoso 实现布局布线, DRC 和 LVS 等 
 
 ## GPIO 的引出
 原有的 Tinyriscv 中引出了2个 GPIO, 现在需要将其修改为16个:
